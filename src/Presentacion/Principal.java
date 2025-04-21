@@ -123,6 +123,8 @@ private void establecerPosicionesCentradas() {
         setSize(new java.awt.Dimension(1024, 768));
         getContentPane().setLayout(null);
 
+        salirBoton.setBackground(new java.awt.Color(51, 153, 255));
+        salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         salirBoton.setText("Salir");
         salirBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,9 +132,10 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(salirBoton);
-        salirBoton.setBounds(934, 741, 72, 23);
+        salirBoton.setBounds(934, 741, 75, 39);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton1.setBackground(new java.awt.Color(51, 153, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Clientes");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,9 +143,10 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(290, 710, 114, 32);
+        jButton1.setBounds(290, 710, 114, 39);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton2.setBackground(new java.awt.Color(51, 153, 255));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton2.setText("Abogados");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,9 +154,10 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(590, 710, 114, 32);
+        jButton2.setBounds(590, 710, 137, 39);
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton3.setBackground(new java.awt.Color(51, 153, 255));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton3.setText("Servicios");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,12 +165,12 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton3);
-        jButton3.setBounds(440, 710, 114, 32);
+        jButton3.setBounds(440, 710, 114, 39);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(264, 56, 499, 32);
+        jLabel1.setBounds(264, 56, 985, 64);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

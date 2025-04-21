@@ -2,10 +2,14 @@ package Presentacion;
 
 import Conceptos.Clientes;
 import Util.XMLCliente;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.event.ListSelectionEvent;
@@ -37,6 +41,8 @@ public Cliente() {
             }
         });
         this.setVisible(true);
+        agregarImagenDeFondo();
+
 
         // Inicializar el modelo de la tabla
         tablaModelClientes = new DefaultTableModel(
@@ -72,7 +78,47 @@ public Cliente() {
         deshabilitarCampos();
     }
 
-  private void centrarElementos() {
+private void agregarImagenDeFondo() {
+    try {
+        // 1. Cargar la imagen original
+        ImageIcon imagenIconoOriginal = new ImageIcon(getClass().getResource("/imagenes/Clientes.jpg"));
+        Image imagenOriginal = imagenIconoOriginal.getImage();
+
+        // 2. Definir las nuevas dimensiones para la imagen (ajusta los valores según necesites)
+        int anchoReducido = 800; // Ejemplo de ancho
+        int altoReducido = 550;  // Ejemplo de alto
+        Image imagenRedimensionada = imagenOriginal.getScaledInstance(anchoReducido, altoReducido, Image.SCALE_SMOOTH);
+        ImageIcon imagenIconoRedimensionado = new ImageIcon(imagenRedimensionada);
+
+        // 3. Crear un JLabel para mostrar la imagen redimensionada
+        JLabel imagenLabel = new JLabel(imagenIconoRedimensionado);
+
+        // 4. Establecer el layout del JFrame en null para posicionar el JLabel manualmente
+        this.getContentPane().setLayout(null);
+
+        // 5. Calcular la posición para que quede centrada abajo
+        int ventanaAncho = this.getContentPane().getWidth();
+        int ventanaAlto = this.getContentPane().getHeight();
+        int x = (ventanaAncho - 175); // Centrar horizontalmente
+        int y = ventanaAlto - altoReducido + 450; // Posicionar casi al borde inferior
+
+        // 6. Establecer las coordenadas y el tamaño del JLabel
+        imagenLabel.setBounds(x, y, anchoReducido, altoReducido);
+
+        // 7. Agregar el JLabel al JFrame
+        this.getContentPane().add(imagenLabel);
+
+        // Asegurarse de que los cambios se reflejen
+        this.revalidate();
+        this.repaint();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar o redimensionar la imagen: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
+private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
 
@@ -90,6 +136,14 @@ public Cliente() {
         int tablaY = panelY + panelAlto + 20; // Debajo del panel con un espacio
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
+        int tablaAnchoDeseado = ventanaAncho - 100; // Ejemplo: un poco menos que el ancho de la ventana
+        int tablaAltoDeseado = 200; // Ejemplo de altura fija
+
+        jScrollPane1.setBounds((ventanaAncho - tablaAnchoDeseado) / 2, // Centrar horizontalmente
+                            jPanel1.getY() + jPanel1.getHeight() + 20, // Debajo del panel
+                            tablaAnchoDeseado,
+                            tablaAltoDeseado);
+    
         // Posicionar el botón "Salir" abajo a la derecha
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
@@ -200,8 +254,11 @@ public Cliente() {
                 "ID", "Nombre", "Teléfono", "Email"
             }
         ));
+        jTable1.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setBackground(new java.awt.Color(51, 153, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Salir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,10 +266,15 @@ public Cliente() {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("ID");
 
+        jTextField1.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField1.setText("Ingresar ID");
 
+        jTextField2.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField2.setText("Ingresar nombre");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,8 +282,11 @@ public Cliente() {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Teléfono");
 
+        jTextField3.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField3.setText("Ingresar teléfono");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,10 +294,14 @@ public Cliente() {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setText("Email");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Nombre");
 
+        jTextField4.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField4.setText("Ingresar email");
         jTextField4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,6 +309,8 @@ public Cliente() {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(51, 153, 255));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,6 +318,8 @@ public Cliente() {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(51, 153, 255));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton4.setText("Modificar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,6 +327,8 @@ public Cliente() {
             }
         });
 
+        jButton5.setBackground(new java.awt.Color(51, 153, 255));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton5.setText("Borrar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,16 +347,12 @@ public Cliente() {
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField4))
-                        .addGap(228, 228, 228))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 634, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                    .addComponent(jTextField2)
+                    .addComponent(jTextField4)
+                    .addComponent(jTextField1))
+                .addGap(228, 228, 228)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -317,6 +388,8 @@ public Cliente() {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButtonGuardar.setBackground(new java.awt.Color(51, 153, 255));
+        jButtonGuardar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButtonGuardar.setText("Guardar");
         jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -342,7 +415,7 @@ public Cliente() {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(440, Short.MAX_VALUE)
+                .addContainerGap(388, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
