@@ -13,8 +13,14 @@ import java.util.List;
 public class XMLServicio {
 
     private List<Servicios> listaServicios = new ArrayList<>();
+    private String rutaArchivoGuardado;
+
+    public XMLServicio() {
+        // Constructor vacío
+    }
 
     public List<Servicios> cargarServicios(String rutaArchivo) {
+        this.rutaArchivoGuardado = rutaArchivo;
         listaServicios.clear();
         try {
             File archivoXML = new File(rutaArchivo);
@@ -32,7 +38,6 @@ public class XMLServicio {
 
                 listaServicios.add(new Servicios(id, nombre, precio));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +48,6 @@ public class XMLServicio {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.newDocument();
-
             Element root = doc.createElement("servicios");
             doc.appendChild(root);
 
@@ -61,17 +65,44 @@ public class XMLServicio {
                 servicio.appendChild(precio);
                 root.appendChild(servicio);
             }
-
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(rutaArchivo));
             transformer.transform(source, result);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean agregarServicio(Servicios nuevo) {
+        if (buscarPorId(nuevo.getidServicio()) == null) {
+            listaServicios.add(nuevo);
+            guardarServicios(this.rutaArchivoGuardado, listaServicios);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean actualizarServicio(Servicios actualizado) {
+        for (int i = 0; i < listaServicios.size(); i++) {
+            if (listaServicios.get(i).getidServicio().equals(actualizado.getidServicio())) {
+                listaServicios.set(i, actualizado);
+                guardarServicios(this.rutaArchivoGuardado, listaServicios);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean eliminarServicio(String id) {
+        Servicios servicioAEliminar = buscarPorId(id);
+        if (servicioAEliminar != null) {
+            listaServicios.remove(servicioAEliminar);
+            guardarServicios(this.rutaArchivoGuardado, listaServicios);
+            return true;
+        }
+        return false;
     }
 
     public List<Servicios> getListaServicios() {

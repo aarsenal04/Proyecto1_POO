@@ -14,8 +14,14 @@ import java.util.List;
 public class XMLAbogado {
 
     private List<Abogados> listaAbogados = new ArrayList<>();
+    private String rutaArchivoGuardado;
+
+    public XMLAbogado() {
+        // Constructor vacío
+    }
 
     public List<Abogados> cargarAbogados(String rutaArchivo, List<Servicios> serviciosDisponibles) {
+        this.rutaArchivoGuardado = rutaArchivo;
         listaAbogados.clear();
         try {
             File archivoXML = new File(rutaArchivo);
@@ -41,10 +47,8 @@ public class XMLAbogado {
                         }
                     }
                 }
-
                 listaAbogados.add(new Abogados(id, nombre, telefono, puesto, new ArrayList<>(serviciosAsignados)));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,14 +87,49 @@ public class XMLAbogado {
                 abg.appendChild(servicios);
                 root.appendChild(abg);
             }
-
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(doc), new StreamResult(new File(rutaArchivo)));
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean agregarAbogado(Abogados nuevo) {
+        if (buscarPorId(nuevo.getidAbogado()) == null) {
+            listaAbogados.add(nuevo);
+            guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean actualizarAbogado(Abogados actualizado) {
+        for (int i = 0; i < listaAbogados.size(); i++) {
+            if (listaAbogados.get(i).getidAbogado().equals(actualizado.getidAbogado())) {
+                listaAbogados.set(i, actualizado);
+                guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean eliminarAbogado(String id) {
+        Abogados abogadoAEliminar = buscarPorId(id);
+        if (abogadoAEliminar != null) {
+            listaAbogados.remove(abogadoAEliminar);
+            guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
+            return true;
+        }
+        return false;
+    }
+
+    public Abogados buscarPorId(String id) {
+        for (Abogados ab : listaAbogados) {
+            if (ab.getidAbogado().equals(id)) return ab;
+        }
+        return null;
     }
 
     public List<Abogados> getListaAbogados() {
