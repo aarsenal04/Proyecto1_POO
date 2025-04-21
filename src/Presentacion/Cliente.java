@@ -3,6 +3,8 @@ package Presentacion;
 import Conceptos.Clientes;
 import Util.XMLCliente;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -18,13 +20,22 @@ public class Cliente extends javax.swing.JFrame {
     private String archivoClientes = "Data/clientes.xml"; // Asegúrate de que la ruta sea correcta
 
 
-    public Cliente() {
+public Cliente() {
         initComponents();
-        this.setLocationRelativeTo(null); // centrar la ventana
+        this.setSize(1024, 768);
+        this.setLocationRelativeTo(null); // centrar la ventana inicialmente
         this.setTitle("Clientes"); // Corregí el título
-        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // hacer que la ventana se maximice cuando se abre
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // hacer que la ventana se maximize cuando se abre
         this.setPreferredSize(new Dimension(1024, 768));
         this.pack(); // ajustar el tamano definido para la ventana
+        getContentPane().setLayout(null); // Establecer null layout para el JFrame
+        centrarElementos();
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                centrarElementos();
+            }
+        });
         this.setVisible(true);
 
         // Inicializar el modelo de la tabla
@@ -61,6 +72,35 @@ public class Cliente extends javax.swing.JFrame {
         deshabilitarCampos();
     }
 
+  private void centrarElementos() {
+        int ventanaAncho = getContentPane().getWidth();
+        int ventanaAlto = getContentPane().getHeight();
+
+        // Calcular el centro para el panel de entrada de datos (jPanel1)
+        int panelAncho = jPanel1.getPreferredSize().width;
+        int panelAlto = jPanel1.getPreferredSize().height;
+        int panelX = (ventanaAncho - panelAncho) / 2;
+        int panelY = 100; // Ajusta la posición vertical según tu preferencia
+        jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
+
+        // Calcular el centro para la tabla (jScrollPane1)
+        int tablaAncho = jScrollPane1.getPreferredSize().width;
+        int tablaAlto = jScrollPane1.getPreferredSize().height;
+        int tablaX = (ventanaAncho - tablaAncho) / 2;
+        int tablaY = panelY + panelAlto + 20; // Debajo del panel con un espacio
+        jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
+
+        // Posicionar el botón "Salir" abajo a la derecha
+        int salirAncho = jButton1.getPreferredSize().width;
+        int salirAlto = jButton1.getPreferredSize().height;
+        int margen = 20;
+        jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
+
+        // Posicionar el botón "Guardar" abajo a la izquierda
+        int guardarAncho = jButtonGuardar.getPreferredSize().width;
+        int guardarAlto = jButtonGuardar.getPreferredSize().height;
+        jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
+    } 
     private void cargarClientesEnTabla() {
         listaClientesEnMemoria = xmlCliente.cargarClientes(archivoClientes);
         tablaModelClientes.setRowCount(0); // Limpiar la tabla antes de cargar
@@ -101,7 +141,6 @@ public class Cliente extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -131,6 +170,27 @@ public class Cliente extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
@@ -276,7 +336,6 @@ public class Cliente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addComponent(jScrollPane1)
-                    .addComponent(jSeparator1)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -285,9 +344,7 @@ public class Cliente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(440, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -486,7 +543,6 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;

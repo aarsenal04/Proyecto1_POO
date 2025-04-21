@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <clientes>
     <cliente id="000000000">
         <nombre>Sin Registro</nombre>
@@ -19,5 +19,20 @@
         <nombre>Pedro Arnaez</nombre>
         <telefono>7777-3000</telefono>
         <email>pedro.a@gmail</email>
+    </cliente>
+    <cliente id="66">
+        <nombre>yhr</nombre>
+        <telefono>54</telefono>
+        <email>hr</email>
+    </cliente>
+    <cliente id="567">
+        <nombre>fh</nombre>
+        <telefono>47</telefono>
+        <email>df</email>
+    </cliente>
+    <cliente id="f">
+        <nombre>d</nombre>
+        <telefono>d</telefono>
+        <email>d</email>
     </cliente>
 </clientes>
