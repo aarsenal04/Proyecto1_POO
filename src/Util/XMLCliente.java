@@ -14,9 +14,15 @@ import java.util.List;
 public class XMLCliente {
 
     private List<Clientes> listaClientes = new ArrayList<>();
+    private String rutaArchivoGuardado; // Para tener la ruta disponible para guardar
+
+    public XMLCliente() {
+        // Constructor vacío
+    }
 
     // Cargar clientes desde XML
     public List<Clientes> cargarClientes(String rutaArchivo) {
+        this.rutaArchivoGuardado = rutaArchivo; // Guardar la ruta para usarla al guardar
         listaClientes.clear();
         try {
             File archivoXML = new File(rutaArchivo);
@@ -97,6 +103,7 @@ public class XMLCliente {
     public boolean agregarCliente(Clientes nuevo) {
         if (buscarPorId(nuevo.getidCliente()) == null) {
             listaClientes.add(nuevo);
+            guardarClientes(this.rutaArchivoGuardado, listaClientes); // Guardar al XML
             return true;
         }
         return false;
@@ -107,6 +114,7 @@ public class XMLCliente {
         for (int i = 0; i < listaClientes.size(); i++) {
             if (listaClientes.get(i).getidCliente().equals(actualizado.getidCliente())) {
                 listaClientes.set(i, actualizado);
+                guardarClientes(this.rutaArchivoGuardado, listaClientes); // Guardar al XML
                 return true;
             }
         }
@@ -118,6 +126,7 @@ public class XMLCliente {
         Clientes c = buscarPorId(id);
         if (c != null) {
             listaClientes.remove(c);
+            guardarClientes(this.rutaArchivoGuardado, listaClientes); // Guardar al XML
             return true;
         }
         return false;
