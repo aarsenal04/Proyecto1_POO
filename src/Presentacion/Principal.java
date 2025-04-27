@@ -31,7 +31,6 @@ public class Principal extends javax.swing.JFrame {
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.setPreferredSize(new Dimension(1024, 768));
         this.pack();
-        agregarImagenDeFondo();
         establecerPosicionesCentradas();
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -39,6 +38,7 @@ public class Principal extends javax.swing.JFrame {
                 establecerPosicionesCentradas();
             }
         });
+        agregarImagenDeFondo();
         this.setVisible(true);
     }
     
@@ -132,7 +132,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(salirBoton);
-        salirBoton.setBounds(934, 741, 75, 39);
+        salirBoton.setBounds(930, 710, 79, 42);
 
         jButton1.setBackground(new java.awt.Color(51, 153, 255));
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -143,7 +143,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(290, 710, 114, 39);
+        jButton1.setBounds(200, 310, 114, 42);
 
         jButton2.setBackground(new java.awt.Color(51, 153, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -154,7 +154,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(590, 710, 137, 39);
+        jButton2.setBounds(620, 310, 141, 42);
 
         jButton3.setBackground(new java.awt.Color(51, 153, 255));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -165,12 +165,12 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton3);
-        jButton3.setBounds(440, 710, 114, 39);
+        jButton3.setBounds(410, 310, 114, 42);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(264, 56, 985, 64);
+        jLabel1.setBounds(20, 60, 991, 64);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -180,7 +180,15 @@ private void establecerPosicionesCentradas() {
     ventanaClientes.setVisible(true);    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    Presentacion.Abogado ventanaAbogados = new Presentacion.Abogado();
+
+        Util.XMLServicio xmlServicio = new Util.XMLServicio();
+        java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
+
+        Util.XMLAbogado xmlAbogado = new Util.XMLAbogado();
+        java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
+
+        Presentacion.Abogado ventanaAbogados = new Presentacion.Abogado(listaAbogados, listaServicios, xmlAbogado);
+
     ventanaAbogados.setVisible(true);    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
