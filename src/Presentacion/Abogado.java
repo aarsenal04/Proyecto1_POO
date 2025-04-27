@@ -1,17 +1,23 @@
 
 package Presentacion;
 
+import Conceptos.Abogados;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author mayte
  */
 public class Abogado extends javax.swing.JFrame {
+    
+    private java.util.List<Conceptos.Abogados> listaAbogados;
+    private java.util.List<Conceptos.Servicios> listaServicios;
+    private Util.XMLAbogado xmlAbogado;
 
-    public Abogado() {
+    public Abogado(java.util.List<Conceptos.Abogados> listaAbogados, java.util.List<Conceptos.Servicios> listaServicios, Util.XMLAbogado xmlAbogado) {
         initComponents();
         this.setSize(1024, 768);
         this.setLocationRelativeTo(null);
@@ -28,6 +34,9 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
         this.setVisible(true);
+        this.listaAbogados = listaAbogados;
+        this.listaServicios = listaServicios;
+        this.xmlAbogado = xmlAbogado;
     }
 
     private void centrarElementos() {
@@ -290,11 +299,24 @@ public class Abogado extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void verEditarServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verEditarServiciosActionPerformed
-        jDialog1.setTitle("Servicios Validados");
-        jDialog1.setSize(400,300);
-        jDialog1.setLocationRelativeTo(this); // centrar respecto al JFrame
-        jDialog1.setModal(true); // bloquear la ventana principal mientras esté abierta
-        jDialog1.setVisible(true);
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un abogado primero.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // obtener el abogado seleccionado de la lista
+        Abogados abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
+
+        // abrir el dialog para editar la lista de abogados
+        EditarServiciosDialog dialog = new EditarServiciosDialog(
+            this,
+            abogadoSeleccionado,
+            listaServicios,
+            xmlAbogado,
+            listaAbogados
+        );
+        dialog.setVisible(true);
     }//GEN-LAST:event_verEditarServiciosActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -305,43 +327,31 @@ public class Abogado extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+public static void main(String args[]) {
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Abogado().setVisible(true);
-            }
-        });
+    } catch (Exception ex) {
+        java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            // crear listas vacías de prueba para no dejar el main sin funcionar
+            Util.XMLServicio xmlServicio = new Util.XMLServicio();
+            java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
+
+            Util.XMLAbogado xmlAbogado = new Util.XMLAbogado();
+            java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
+
+            new Abogado(listaAbogados, listaServicios, xmlAbogado).setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
