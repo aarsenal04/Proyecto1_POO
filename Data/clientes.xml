@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <clientes>
     <cliente id="000000000">
-        <nombre>Sin Registro</nombre>
-        <telefono>NA</telefono>
-        <email>NA</email>
+        <nombre>Maited Angulo</nombre>
+        <telefono>87873423</telefono>
+        <email>maited@gmail.com</email>
     </cliente>
     <cliente id="300001111">
         <nombre>Juan Perez</nombre>
@@ -21,18 +21,18 @@
         <email>pedro.a@gmail</email>
     </cliente>
     <cliente id="66">
-        <nombre>yhr</nombre>
-        <telefono>54</telefono>
-        <email>hr</email>
+        <nombre>Francella Fernandez</nombre>
+        <telefono>84346858</telefono>
+        <email>francellaf@hotmail.com</email>
     </cliente>
     <cliente id="567">
-        <nombre>fh</nombre>
-        <telefono>47</telefono>
-        <email>df</email>
+        <nombre>Walter Solano</nombre>
+        <telefono>47454534</telefono>
+        <email>walsol@outlook.com</email>
     </cliente>
-    <cliente id="f">
-        <nombre>d</nombre>
-        <telefono>d</telefono>
-        <email>d</email>
+    <cliente id="123123">
+        <nombre>Marta Quiros</nombre>
+        <telefono>12343212</telefono>
+        <email>martaq@gmail.com</email>
     </cliente>
 </clientes>
