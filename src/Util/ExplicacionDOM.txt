@@ -1,0 +1,25 @@
+- Tipo de Analizador Utilizado: DOM (Document Object Model)
+
+- Razón del Uso: para este proyecto utilizamos el analizador DOM porque el objetivo principal era cargar todo el contenido de los archivos XML (clientes.xml, servicios.xml y abogados.xml) en estructuras de objetos en memoria, trabajar con ellos como si fueran una base de datos (crear, modificar o eliminar datos) y luego reescribir el contenido completo en los archivos XML.
+
+- Según nuestra comparación, DOM es adecuado para esta situación porque:
+
+	1. carga todo el documento XML en memoria, permitiendo acceso y manipulación completa de los datos.
+
+	2. es ideal para archivos XML de tamaño pequeño a moderado, como los requeridos en este proyecto.
+
+	3. facilita la modificación de atributos y estructuras, ya que todo el documento se puede navegar y cambiar dinámicamente antes de guardarlo de nuevo.
+
+- Ventajas y Desventajas
+
+- Ventajas: 
+	1. facilidad de navegación y edición: al tener el documento entero, se pude buscar, actualizar o eliminar cualquier elemento.
+
+	2. simplicidad para el tamaño del proyecto: los XML del bufete de abogados son relativamente pequeños, es por esto que no se presentaron problemas de rendimiento o consumo excesivo de memoria.
+
+	3. Manipulación de datos estructurados: el modelo de objetos de DOM es muy útil para reflejar la estructura jerárquica de los datos de clientes, abogados y servicios. Pensándolo bien, esta estructura también se pudo haber realizado con archivos JSON o YAML.
+
+- Desventajas:
+	1. Consumo de memoria: si los archivos fueran muy grandes, cargar todo el documento podría ser ineficiente.
+	
+	2. Mayor complejidad en proyectos más grandes: para archivos XML grandes y con mucho uso, DOM no sería recomendable, y sería mejor usar SAX.
