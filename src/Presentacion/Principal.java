@@ -1,110 +1,94 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Presentacion;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-/**
- *
- * @author mayte
- */
+
 public class Principal extends javax.swing.JFrame {
 
     public Principal() {
         initComponents();
-        this.setSize(1024, 768);
         this.setLocationRelativeTo(null);
         this.setTitle("Servicios");
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        this.setPreferredSize(new Dimension(1024, 768));
         this.pack();
-        establecerPosicionesCentradas();
-        this.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                establecerPosicionesCentradas();
-            }
-        });
         agregarImagenDeFondo();
+        agregarComponentesCentrados();
         this.setVisible(true);
     }
     
-    private void agregarImagenDeFondo() {
-        try {
-            // 1. Cargar la imagen
-            ImageIcon imagenIcono = new ImageIcon(getClass().getResource("/imagenes/fondo.png"));
-            // 2. Crear un JLabel para mostrar la imagen
-            JLabel imagenLabel = new JLabel(imagenIcono);
+private void agregarImagenDeFondo() {
+    try {
+        ImageIcon imagenIconoOriginal = new ImageIcon(getClass().getResource("/imagenes/fondo.png"));
+        Image imagenOriginal = imagenIconoOriginal.getImage();
 
-            // 3. Establecer el layout del JFrame en BorderLayout para que la imagen ocupe todo el espacio
-            this.getContentPane().setLayout(new BorderLayout());
+        int anchoDeseado = 400;
+        int altoDeseado = 450;
 
-            // 4. Agregar el JLabel al centro del JFrame
-            this.getContentPane().add(imagenLabel, BorderLayout.CENTER);
+        Image imagenEscalada = imagenOriginal.getScaledInstance(anchoDeseado, altoDeseado, Image.SCALE_SMOOTH);
+        ImageIcon imagenIconoEscalado = new ImageIcon(imagenEscalada);
+        JLabel imagenLabel = new JLabel(imagenIconoEscalado);
+        imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-            // Asegurarse de que los cambios se reflejen
-            this.revalidate();
-            this.repaint();
+        // *** CAMBIO: Usar GridBagConstraints para la imagen ***
+        GridBagConstraints gbcImagen = new GridBagConstraints();
+        gbcImagen.gridx = 0;
+        gbcImagen.gridy = 3; // Colocar debajo del botón salir (que está en gridy=2)
+        gbcImagen.weightx = 1.0; // Para que ocupe todo el ancho
+        gbcImagen.anchor = GridBagConstraints.SOUTH; // Alinear al sur
+        gbcImagen.insets = new Insets(10, 10, 10, 10); // Ajustar márgenes
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar la imagen: " + e.getMessage());
-            e.printStackTrace();
-        }
+        getContentPane().add(imagenLabel, gbcImagen);
+
+        this.revalidate();
+        this.repaint();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar la imagen: " + e.getMessage());
+        e.printStackTrace();
     }
-        
-private void establecerPosicionesCentradas() {
-    int ventanaAncho = getContentPane().getWidth();
-    int ventanaAlto = getContentPane().getHeight();
+}    
+    
+private void agregarComponentesCentrados() {
+        getContentPane().setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 10, 10, 10); // *** CAMBIO: Reducir el espacio superior del título ***
+        gbc.anchor = GridBagConstraints.NORTH;
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
+        getContentPane().add(jLabel1, gbc);
 
-    // Posicionar el JLabel (título) en la parte superior centrada
-    int tituloAncho = jLabel1.getPreferredSize().width;
-    int tituloX = (ventanaAncho - tituloAncho) / 2;
-    jLabel1.setBounds(tituloX, 50, tituloAncho, jLabel1.getPreferredSize().height);
+        JPanel panelBotones = new JPanel();
+        panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 0));
+        panelBotones.setOpaque(false);
 
-    // Calcular la altura total de los botones con espaciado
-    int botonAlto = jButton1.getPreferredSize().height;
-    int espacioEntreBotones = 15;
-    int alturaTotalBotones = (botonAlto * 3) + (espacioEntreBotones * 2);
+        Dimension botonDimension = new Dimension(160, 45);
+        jButton1.setPreferredSize(botonDimension);
+        jButton2.setPreferredSize(botonDimension);
+        jButton3.setPreferredSize(botonDimension);
 
-    // Calcular la coordenada Y inicial para el primer botón para centrar el grupo verticalmente
-    int botonesYInicial = (ventanaAlto - alturaTotalBotones) / 2;
+        panelBotones.add(jButton1);
+        panelBotones.add(jButton3);
+        panelBotones.add(jButton2);
 
-    // *** MODIFICACIÓN: Desplazar los botones el doble del último desplazamiento ***
-    int desplazamientoAbajo = 150 * 2 * 2; // Ahora el desplazamiento es el doble del anterior (600)
-    botonesYInicial += desplazamientoAbajo;
+        gbc.gridy = 1; // Los botones siguen en la fila 1
+        getContentPane().add(panelBotones, gbc);
 
-    // Centrar cada botón horizontalmente y posicionarlos verticalmente
-    int boton1Ancho = jButton1.getPreferredSize().width;
-    int boton1X = (ventanaAncho - boton1Ancho) / 2;
-    jButton1.setBounds(boton1X, botonesYInicial, boton1Ancho, botonAlto);
+        gbc.gridy = 2; // El botón salir sigue en la fila 2
+        salirBoton.setPreferredSize(new Dimension(100, 40));
+        getContentPane().add(salirBoton, gbc);
+    }
 
-    int boton2Ancho = jButton2.getPreferredSize().width;
-    int boton2X = (ventanaAncho - boton2Ancho) / 2;
-    jButton2.setBounds(boton2X, botonesYInicial + botonAlto + espacioEntreBotones, boton2Ancho, botonAlto);
-
-    int boton3Ancho = jButton3.getPreferredSize().width;
-    int boton3X = (ventanaAncho - boton3Ancho) / 2;
-    jButton3.setBounds(boton3X, botonesYInicial + (2 * botonAlto) + (2 * espacioEntreBotones), boton3Ancho, botonAlto);
-
-    // Posicionar el botón "Salir" en la parte inferior derecha con un margen
-    int salirAncho = salirBoton.getPreferredSize().width;
-    int salirAlto = salirBoton.getPreferredSize().height;
-    int margen = 20;
-    salirBoton.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
-}
 @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -120,7 +104,6 @@ private void establecerPosicionesCentradas() {
         jLabel3.setText("jLabel3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(1024, 768));
         getContentPane().setLayout(null);
 
         salirBoton.setBackground(new java.awt.Color(51, 153, 255));
@@ -132,7 +115,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(salirBoton);
-        salirBoton.setBounds(930, 710, 79, 42);
+        salirBoton.setBounds(930, 710, 75, 39);
 
         jButton1.setBackground(new java.awt.Color(51, 153, 255));
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -143,7 +126,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(200, 310, 114, 42);
+        jButton1.setBounds(200, 310, 114, 39);
 
         jButton2.setBackground(new java.awt.Color(51, 153, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -154,7 +137,7 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(620, 310, 141, 42);
+        jButton2.setBounds(620, 310, 137, 39);
 
         jButton3.setBackground(new java.awt.Color(51, 153, 255));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -165,12 +148,12 @@ private void establecerPosicionesCentradas() {
             }
         });
         getContentPane().add(jButton3);
-        jButton3.setBounds(410, 310, 114, 42);
+        jButton3.setBounds(410, 310, 114, 39);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 60, 991, 64);
+        jLabel1.setBounds(20, 60, 985, 64);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -199,11 +182,8 @@ private void establecerPosicionesCentradas() {
     this.dispose(); // Cierra la ventana actual
     }//GEN-LAST:event_salirBotonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -224,7 +204,6 @@ private void establecerPosicionesCentradas() {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

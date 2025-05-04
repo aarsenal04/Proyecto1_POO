@@ -41,7 +41,6 @@ public Cliente() {
             }
         });
         this.setVisible(true);
-        agregarImagenDeFondo();
 
 
         // Inicializar el modelo de la tabla
@@ -78,47 +77,7 @@ public Cliente() {
         deshabilitarCampos();
     }
 
-private void agregarImagenDeFondo() {
-    try {
-        // 1. Cargar la imagen original
-        ImageIcon imagenIconoOriginal = new ImageIcon(getClass().getResource("/imagenes/Clientes.jpg"));
-        Image imagenOriginal = imagenIconoOriginal.getImage();
-
-        // 2. Definir las nuevas dimensiones para la imagen (ajusta los valores según necesites)
-        int anchoReducido = 800; // Ejemplo de ancho
-        int altoReducido = 550;  // Ejemplo de alto
-        Image imagenRedimensionada = imagenOriginal.getScaledInstance(anchoReducido, altoReducido, Image.SCALE_SMOOTH);
-        ImageIcon imagenIconoRedimensionado = new ImageIcon(imagenRedimensionada);
-
-        // 3. Crear un JLabel para mostrar la imagen redimensionada
-        JLabel imagenLabel = new JLabel(imagenIconoRedimensionado);
-
-        // 4. Establecer el layout del JFrame en null para posicionar el JLabel manualmente
-        this.getContentPane().setLayout(null);
-
-        // 5. Calcular la posición para que quede centrada abajo
-        int ventanaAncho = this.getContentPane().getWidth();
-        int ventanaAlto = this.getContentPane().getHeight();
-        int x = (ventanaAncho - 175); // Centrar horizontalmente
-        int y = ventanaAlto - altoReducido + 450; // Posicionar casi al borde inferior
-
-        // 6. Establecer las coordenadas y el tamaño del JLabel
-        imagenLabel.setBounds(x, y, anchoReducido, altoReducido);
-
-        // 7. Agregar el JLabel al JFrame
-        this.getContentPane().add(imagenLabel);
-
-        // Asegurarse de que los cambios se reflejen
-        this.revalidate();
-        this.repaint();
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al cargar o redimensionar la imagen: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-
-private void centrarElementos() {
+    private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
 
@@ -126,24 +85,16 @@ private void centrarElementos() {
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
-        int panelY = 100; // Ajusta la posición vertical según tu preferencia
+        int panelY = 20; // Ajusta la posición vertical superior del panel
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Calcular el centro para la tabla (jScrollPane1)
-        int tablaAncho = jScrollPane1.getPreferredSize().width;
-        int tablaAlto = jScrollPane1.getPreferredSize().height;
-        int tablaX = (ventanaAncho - tablaAncho) / 2;
+        // Ajustar la tabla para que ocupe el ancho disponible debajo del panel
+        int tablaX = 50; // Margen izquierdo
         int tablaY = panelY + panelAlto + 20; // Debajo del panel con un espacio
+        int tablaAncho = ventanaAncho - 100; // Ancho con márgenes izquierdo y derecho
+        int tablaAlto = ventanaAlto - tablaY - 80; // Alto restante con margen inferior
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        int tablaAnchoDeseado = ventanaAncho - 100; // Ejemplo: un poco menos que el ancho de la ventana
-        int tablaAltoDeseado = 200; // Ejemplo de altura fija
-
-        jScrollPane1.setBounds((ventanaAncho - tablaAnchoDeseado) / 2, // Centrar horizontalmente
-                            jPanel1.getY() + jPanel1.getHeight() + 20, // Debajo del panel
-                            tablaAnchoDeseado,
-                            tablaAltoDeseado);
-    
         // Posicionar el botón "Salir" abajo a la derecha
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
@@ -154,7 +105,12 @@ private void centrarElementos() {
         int guardarAncho = jButtonGuardar.getPreferredSize().width;
         int guardarAlto = jButtonGuardar.getPreferredSize().height;
         jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
-    } 
+
+        // Forzar la revalidación y el repintado
+        getContentPane().revalidate();
+        getContentPane().repaint();
+    }
+
     private void cargarClientesEnTabla() {
         listaClientesEnMemoria = xmlCliente.cargarClientes(archivoClientes);
         tablaModelClientes.setRowCount(0); // Limpiar la tabla antes de cargar
