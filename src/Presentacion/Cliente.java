@@ -2,14 +2,10 @@ package Presentacion;
 
 import Conceptos.Clientes;
 import Util.XMLCliente;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.event.ListSelectionEvent;
@@ -17,43 +13,40 @@ import javax.swing.event.ListSelectionListener;
 
 public class Cliente extends javax.swing.JFrame {
 
-    private XMLCliente xmlCliente = new XMLCliente();
-    private DefaultTableModel tablaModelClientes;
-    private List<Clientes> listaClientesEnMemoria;
-    private Clientes clienteSeleccionado = null;
-    private String archivoClientes = "Data/clientes.xml"; // Asegúrate de que la ruta sea correcta
+    private XMLCliente xmlCliente = new XMLCliente(); // Manejo de XML para clientes
+    private DefaultTableModel tablaModelClientes; // Modelo de la tabla de clientes
+    private List<Clientes> listaClientesEnMemoria; // Lista de clientes cargados
+    private Clientes clienteSeleccionado = null; // Cliente seleccionado en la tabla
+    private String archivoClientes = "Data/clientes.xml"; // Archivo XML de clientes
 
-
-public Cliente() {
-        initComponents();
-        this.setSize(1024, 768);
-        this.setLocationRelativeTo(null); // centrar la ventana inicialmente
-        this.setTitle("Clientes"); // Corregí el título
-        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // hacer que la ventana se maximize cuando se abre
-        this.setPreferredSize(new Dimension(1024, 768));
-        this.pack(); // ajustar el tamano definido para la ventana
-        getContentPane().setLayout(null); // Establecer null layout para el JFrame
-        centrarElementos();
-        this.addComponentListener(new ComponentAdapter() {
+    public Cliente() {
+        initComponents(); // Inicializa componentes de la interfaz
+        setSize(1024, 768);
+        setLocationRelativeTo(null); // Centra la ventana
+        setTitle("Clientes");
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setPreferredSize(new Dimension(1024, 768));
+        pack(); // Ajusta el tamaño
+        getContentPane().setLayout(null); // Layout manual
+        centrarElementos(); // Posiciona los elementos
+        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos();
+                centrarElementos(); // Re-posiciona al redimensionar
             }
         });
-        this.setVisible(true);
+        setVisible(true);
 
-
-        // Inicializar el modelo de la tabla
+        // Inicializa el modelo de la tabla
         tablaModelClientes = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nombre", "Teléfono", "Email"}
+                new String[]{"ID", "Nombre", "Teléfono", "Email"} // Columnas de la tabla
         );
         jTable1.setModel(tablaModelClientes);
 
-        // Cargar los clientes desde el XML y llenar la tabla
-        cargarClientesEnTabla();
+        cargarClientesEnTabla(); // Carga y muestra los clientes
 
-        // Agregar listener para la selección de filas en la tabla
+        // Listener para la selección de filas en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent evt) {
@@ -61,59 +54,56 @@ public Cliente() {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         clienteSeleccionado = listaClientesEnMemoria.get(filaSeleccionada);
-                        // Llenar los campos de texto con la información del cliente seleccionado
+                        // Llena los campos con el cliente seleccionado
                         jTextField1.setText(clienteSeleccionado.getidCliente());
                         jTextField2.setText(clienteSeleccionado.getNombreCliente());
                         jTextField3.setText(clienteSeleccionado.getTelefonoCliente());
                         jTextField4.setText(clienteSeleccionado.getEmailCliente());
-                        // Deshabilitar el ID para la edición (excepto cuando se presiona "Nuevo")
-                        jTextField1.setEnabled(false);
+                        jTextField1.setEnabled(false); // ID no editable al seleccionar
                     }
                 }
             }
         });
 
-        // Deshabilitar la edición de los campos al inicio
-        deshabilitarCampos();
+        deshabilitarCampos(); // Deshabilita los campos al inicio
     }
 
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
+        int margen = 20;
 
-        // Calcular el centro para el panel de entrada de datos (jPanel1)
+        // Posiciona el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
-        int panelY = 20; // Ajusta la posición vertical superior del panel
+        int panelY = 20;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Ajustar la tabla para que ocupe el ancho disponible debajo del panel
-        int tablaX = 50; // Margen izquierdo
-        int tablaY = panelY + panelAlto + 20; // Debajo del panel con un espacio
-        int tablaAncho = ventanaAncho - 100; // Ancho con márgenes izquierdo y derecho
-        int tablaAlto = ventanaAlto - tablaY - 80; // Alto restante con margen inferior
+        // Ajusta la tabla
+        int tablaX = 50;
+        int tablaY = panelY + panelAlto + 20;
+        int tablaAncho = ventanaAncho - 100;
+        int tablaAlto = ventanaAlto - tablaY - 80;
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // Posicionar el botón "Salir" abajo a la derecha
+        // Posiciona botón "Salir"
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
-        int margen = 20;
         jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
 
-        // Posicionar el botón "Guardar" abajo a la izquierda
+        // Posiciona botón "Guardar"
         int guardarAncho = jButtonGuardar.getPreferredSize().width;
         int guardarAlto = jButtonGuardar.getPreferredSize().height;
         jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
 
-        // Forzar la revalidación y el repintado
         getContentPane().revalidate();
         getContentPane().repaint();
     }
 
     private void cargarClientesEnTabla() {
         listaClientesEnMemoria = xmlCliente.cargarClientes(archivoClientes);
-        tablaModelClientes.setRowCount(0); // Limpiar la tabla antes de cargar
+        tablaModelClientes.setRowCount(0); // Limpia la tabla
         for (Clientes cliente : listaClientesEnMemoria) {
             tablaModelClientes.addRow(new Object[]{
                     cliente.getidCliente(),
@@ -138,11 +128,6 @@ public Cliente() {
         jTextField4.setText("");
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -297,22 +282,28 @@ public Cliente() {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
                     .addComponent(jTextField2)
                     .addComponent(jTextField4)
                     .addComponent(jTextField1))
-                .addGap(228, 228, 228)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(222, 222, 222)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,7 +327,7 @@ public Cliente() {
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton3)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4)
                         .addGap(18, 18, 18)
                         .addComponent(jButton5)
@@ -361,9 +352,11 @@ public Cliente() {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(jButtonGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addGap(9, 9, 9))
                     .addComponent(jScrollPane1)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -371,7 +364,7 @@ public Cliente() {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(388, Short.MAX_VALUE)
+                .addContainerGap(394, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,165 +386,136 @@ public Cliente() {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-  // Limpiar todos los campos de texto
-    limpiarCampos(); // Llama al método que ya tienes para limpiar los campos
+        // Limpiar todos los campos de texto
+          limpiarCampos();
 
-    // Habilitar todos los campos para la edición
-    jTextField1.setEnabled(true); // Campo ID
-    jTextField2.setEnabled(true); // Campo Nombre
-    jTextField3.setEnabled(true); // Campo Teléfono
-    jTextField4.setEnabled(true); // Campo Email
+          // Habilitar todos los campos para la edición
+          jTextField1.setEnabled(true); // Campo ID
+          jTextField2.setEnabled(true); // Campo Nombre
+          jTextField3.setEnabled(true); // Campo Teléfono
+          jTextField4.setEnabled(true); // Campo Email
 
-    // Deseleccionar cualquier fila que pudiera estar seleccionada en la tabla
-    jTable1.clearSelection();
+          // Deseleccionar cualquier fila que pudiera estar seleccionada en la tabla
+          jTable1.clearSelection();
 
-    // Establecer el cliente seleccionado a null, ya que estamos creando uno nuevo
-    clienteSeleccionado = null;
+          // Establecer el cliente seleccionado a null, ya que se está creando uno nuevo
+          clienteSeleccionado = null;
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    // Obtener la fila seleccionada en la tabla
-    int filaSeleccionada = jTable1.getSelectedRow();
+        // Obtener la fila seleccionada en la tabla
+        int filaSeleccionada = jTable1.getSelectedRow();
 
-    // Verificar si hay alguna fila seleccionada
-    if (filaSeleccionada != -1) {
-        // Obtener el cliente a eliminar de la lista en memoria
-        clienteSeleccionado = listaClientesEnMemoria.get(filaSeleccionada);
+        // Verificar si hay alguna fila seleccionada
+        if (filaSeleccionada != -1) {
+            // Obtener el cliente a eliminar de la lista en memoria
+            clienteSeleccionado = listaClientesEnMemoria.get(filaSeleccionada);
 
-        // Mostrar un cuadro de diálogo de confirmación
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este cliente?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
+            // Mostrar un cuadro de diálogo de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este cliente?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
 
-        // Si el usuario confirma la eliminación
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            // Eliminar el cliente del archivo XML
-            if (xmlCliente.eliminarCliente(clienteSeleccionado.getidCliente())) {
+            // Si el usuario confirma la eliminación
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                // Eliminar el cliente del archivo XML
+                if (xmlCliente.eliminarCliente(clienteSeleccionado.getidCliente())) {
+                    // Recargar los clientes desde el XML y actualizar la tabla
+                    cargarClientesEnTabla();
+                    // Limpiar los campos de texto
+                    limpiarCampos();
+                    // Resetear el cliente seleccionado
+                    clienteSeleccionado = null;
+                    // Mostrar un mensaje de éxito
+                    JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente.");
+                } else {
+                    // Mostrar un mensaje de error si la eliminación falla
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            // Mostrar un mensaje si no se ha seleccionado ningún cliente
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
+        // Obtener los datos de los campos de texto
+        String id = jTextField1.getText().trim();
+        String nombre = jTextField2.getText().trim();
+        String telefono = jTextField3.getText().trim();
+        String email = jTextField4.getText().trim();
+
+        // Validar que todos los campos estén llenos
+        if (id.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return; // Salir del método si hay campos vacíos
+        }
+
+        // Crear un nuevo objeto Cliente con los datos ingresados
+        Clientes clienteNuevo = new Clientes(id, nombre, telefono, email);
+
+        // Determinar si se está creando un nuevo cliente o modificando uno existente
+        if (clienteSeleccionado != null) { // Modo Modificar
+            // Actualizar el cliente existente en la lista en memoria
+            if (xmlCliente.actualizarCliente(clienteNuevo)) {
                 // Recargar los clientes desde el XML y actualizar la tabla
                 cargarClientesEnTabla();
                 // Limpiar los campos de texto
                 limpiarCampos();
                 // Resetear el cliente seleccionado
                 clienteSeleccionado = null;
+                // Deshabilitar los campos después de guardar
+                deshabilitarCampos();
                 // Mostrar un mensaje de éxito
-                JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente.");
+                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.");
             } else {
-                // Mostrar un mensaje de error si la eliminación falla
-                JOptionPane.showMessageDialog(this, "Error al eliminar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                // Mostrar un mensaje de error si la actualización falla
+                JOptionPane.showMessageDialog(this, "Error al actualizar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else { // Modo Nuevo
+            // Intentar agregar el nuevo cliente al archivo XML
+            if (xmlCliente.agregarCliente(clienteNuevo)) {
+                // Recargar los clientes desde el XML y actualizar la tabla
+                cargarClientesEnTabla();
+                // Limpiar los campos de texto
+                limpiarCampos();
+                // Deshabilitar los campos después de guardar
+                deshabilitarCampos();
+                // Mostrar un mensaje de éxito
+                JOptionPane.showMessageDialog(this, "Cliente agregado correctamente.");
+            } else {
+                // Mostrar un mensaje de error si el ID ya existe
+                JOptionPane.showMessageDialog(this, "El ID del cliente ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    } else {
-        // Mostrar un mensaje si no se ha seleccionado ningún cliente
-        JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-    }
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-    // Obtener los datos de los campos de texto
-    String id = jTextField1.getText().trim();
-    String nombre = jTextField2.getText().trim();
-    String telefono = jTextField3.getText().trim();
-    String email = jTextField4.getText().trim();
-
-    // Validar que todos los campos estén llenos
-    if (id.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || email.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        return; // Salir del método si hay campos vacíos
-    }
-
-    // Crear un nuevo objeto Cliente con los datos ingresados
-    Clientes clienteNuevo = new Clientes(id, nombre, telefono, email);
-
-    // Determinar si se está creando un nuevo cliente o modificando uno existente
-    if (clienteSeleccionado != null) { // Modo Modificar
-        // Actualizar el cliente existente en la lista en memoria
-        if (xmlCliente.actualizarCliente(clienteNuevo)) {
-            // Recargar los clientes desde el XML y actualizar la tabla
-            cargarClientesEnTabla();
-            // Limpiar los campos de texto
-            limpiarCampos();
-            // Resetear el cliente seleccionado
-            clienteSeleccionado = null;
-            // Deshabilitar los campos después de guardar
-            deshabilitarCampos();
-            // Mostrar un mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.");
-        } else {
-            // Mostrar un mensaje de error si la actualización falla
-            JOptionPane.showMessageDialog(this, "Error al actualizar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    } else { // Modo Nuevo
-        // Intentar agregar el nuevo cliente al archivo XML
-        if (xmlCliente.agregarCliente(clienteNuevo)) {
-            // Recargar los clientes desde el XML y actualizar la tabla
-            cargarClientesEnTabla();
-            // Limpiar los campos de texto
-            limpiarCampos();
-            // Deshabilitar los campos después de guardar
-            deshabilitarCampos();
-            // Mostrar un mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Cliente agregado correctamente.");
-        } else {
-            // Mostrar un mensaje de error si el ID ya existe
-            JOptionPane.showMessageDialog(this, "El ID del cliente ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    // Obtener la fila seleccionada en la tabla
-    int filaSeleccionada = jTable1.getSelectedRow();
+        // Obtener la fila seleccionada en la tabla
+        int filaSeleccionada = jTable1.getSelectedRow();
 
-    // Verificar si hay alguna fila seleccionada
-    if (filaSeleccionada != -1) {
-        // Habilitar la edición de los campos (excepto el ID)
-        jTextField2.setEnabled(true); // Campo Nombre
-        jTextField3.setEnabled(true); // Campo Teléfono
-        jTextField4.setEnabled(true); // Campo Email
+        // Verificar si hay alguna fila seleccionada
+        if (filaSeleccionada != -1) {
+            // Habilitar la edición de los campos (excepto el ID)
+            jTextField2.setEnabled(true); // Campo Nombre
+            jTextField3.setEnabled(true); // Campo Teléfono
+            jTextField4.setEnabled(true); // Campo Email
 
-        // El campo ID debe permanecer deshabilitado para la modificación
-        jTextField1.setEnabled(false);
-    } else {
-        // Mostrar un mensaje si no se ha seleccionado ningún cliente
-        JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-    }
+            // El campo ID debe permanecer deshabilitado para la modificación
+            jTextField1.setEnabled(false);
+        } else {
+            // Mostrar un mensaje si no se ha seleccionado ningún cliente
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Cliente().setVisible(true);

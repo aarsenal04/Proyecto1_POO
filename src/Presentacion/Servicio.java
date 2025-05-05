@@ -13,43 +13,40 @@ import javax.swing.event.ListSelectionListener;
 
 public class Servicio extends javax.swing.JFrame {
 
-    private XMLServicio xmlServicio = new XMLServicio();
-    private DefaultTableModel tablaModelServicios;
-    private List<Servicios> listaServiciosEnMemoria;
-    private Servicios servicioSeleccionado = null;
-    private String archivoServicios = "Data/servicios.xml"; // Asegúrate de que la ruta sea correcta
-
+    private XMLServicio xmlServicio = new XMLServicio(); // Manejo de XML para servicios
+    private DefaultTableModel tablaModelServicios; // Modelo de la tabla de servicios
+    private List<Servicios> listaServiciosEnMemoria; // Lista de servicios cargados
+    private Servicios servicioSeleccionado = null; // Servicio seleccionado en la tabla
+    private String archivoServicios = "Data/servicios.xml"; // Archivo XML de servicios
 
 public Servicio() {
-        initComponents();
-        this.setSize(1024, 768);
-        this.setLocationRelativeTo(null); // centrar la ventana inicialmente
-        this.setTitle("Servicios"); // Corregí el título
-        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // hacer que la ventana se maximize cuando se abre
-        this.setPreferredSize(new Dimension(1024, 768));
-        this.pack(); // ajustar el tamano definido para la ventana
-        getContentPane().setLayout(null); // Establecer null layout para el JFrame
-        centrarElementos();
-        this.addComponentListener(new ComponentAdapter() {
+        initComponents(); // Inicializa componentes de la interfaz
+        setSize(1024, 768);
+        setLocationRelativeTo(null); // Centra la ventana
+        setTitle("Servicios");
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setPreferredSize(new Dimension(1024, 768));
+        pack(); // Ajusta el tamaño
+        getContentPane().setLayout(null); // Layout manual
+        centrarElementos(); // Posiciona los elementos
+        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos();
+                centrarElementos(); // Re-posiciona al redimensionar
             }
         });
-        this.setVisible(true);
+        setVisible(true);
 
-
-        // Inicializar el modelo de la tabla
+        // Inicializa el modelo de la tabla
         tablaModelServicios = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nombre", "Precio"}
+                new String[]{"ID", "Nombre", "Precio"} // Columnas de la tabla
         );
         jTable1.setModel(tablaModelServicios);
 
-        // Cargar los servicios desde el XML y llenar la tabla
-        cargarServiciosEnTabla();
+        cargarServiciosEnTabla(); // Carga y muestra los servicios
 
-        // Agregar listener para la selección de filas en la tabla
+        // Listener para la selección de filas en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent evt) {
@@ -57,57 +54,55 @@ public Servicio() {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         servicioSeleccionado = listaServiciosEnMemoria.get(filaSeleccionada);
-                        // Llenar los campos de texto con la información del servicio seleccionado
+                        // Llena los campos con el servicio seleccionado
                         jTextField1.setText(servicioSeleccionado.getidServicio());
                         jTextField2.setText(servicioSeleccionado.getNombreServicio());
-                        jTextField3.setText(String.valueOf(servicioSeleccionado.getPrecioServicio()));                        // Deshabilitar el ID para la edición (excepto cuando se presiona "Nuevo")
-                        jTextField1.setEnabled(false);
+                        jTextField3.setText(String.valueOf(servicioSeleccionado.getPrecioServicio()));
+                        jTextField1.setEnabled(false); // ID no editable al seleccionar
                     }
                 }
             }
         });
 
-        // Deshabilitar la edición de los campos al inicio
-        deshabilitarCampos();
+        deshabilitarCampos(); // Deshabilita los campos al inicio
     }
 
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
 
-        // Calcular el centro para el panel de entrada de datos (jPanel1)
+        // Posiciona el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
-        int panelY = 20; // Ajusta la posición vertical superior del panel
+        int panelY = 20;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Ajustar la tabla para que ocupe el ancho disponible debajo del panel
-        int tablaX = 50; // Margen izquierdo
-        int tablaY = panelY + panelAlto + 20; // Debajo del panel con un espacio
-        int tablaAncho = ventanaAncho - 100; // Ancho con márgenes izquierdo y derecho
-        int tablaAlto = ventanaAlto - tablaY - 80; // Alto restante con margen inferior
+        // Ajusta la tabla
+        int tablaX = 50;
+        int tablaY = panelY + panelAlto + 20;
+        int tablaAncho = ventanaAncho - 100;
+        int tablaAlto = ventanaAlto - tablaY - 80;
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // Posicionar el botón "Salir" abajo a la derecha
+        // Posiciona botón "Salir"
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
         int margen = 20;
         jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
 
-        // Posicionar el botón "Guardar" abajo a la izquierda
+        // Posiciona botón "Guardar"
         int guardarAncho = jButtonGuardar.getPreferredSize().width;
         int guardarAlto = jButtonGuardar.getPreferredSize().height;
         jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
 
-        // Forzar la revalidación y el repintado
         getContentPane().revalidate();
         getContentPane().repaint();
     }
 
 private void cargarServiciosEnTabla() {
         listaServiciosEnMemoria = xmlServicio.cargarServicios(archivoServicios);
-        tablaModelServicios.setRowCount(0); // Limpiar la tabla antes de cargar
+        tablaModelServicios.setRowCount(0); // Limpia la tabla
         for (Servicios servicio : listaServiciosEnMemoria) {
             tablaModelServicios.addRow(new Object[]{
                     servicio.getidServicio(),
@@ -129,11 +124,6 @@ private void cargarServiciosEnTabla() {
         jTextField3.setText("");
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -202,7 +192,7 @@ private void cargarServiciosEnTabla() {
         jTable1.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setBackground(new java.awt.Color(51, 153, 255));
+        jButton1.setBackground(new java.awt.Color(255, 102, 102));
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Salir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -214,11 +204,11 @@ private void cargarServiciosEnTabla() {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("ID");
 
-        jTextField1.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField1.setBackground(new java.awt.Color(255, 204, 204));
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField1.setText("Ingresar ID");
 
-        jTextField2.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField2.setBackground(new java.awt.Color(255, 204, 204));
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField2.setText("Ingresar nombre");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -230,7 +220,7 @@ private void cargarServiciosEnTabla() {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Precio");
 
-        jTextField3.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField3.setBackground(new java.awt.Color(255, 204, 204));
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField3.setText("Ingresar teléfono");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -242,7 +232,7 @@ private void cargarServiciosEnTabla() {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Nombre");
 
-        jButton3.setBackground(new java.awt.Color(51, 153, 255));
+        jButton3.setBackground(new java.awt.Color(255, 102, 102));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -251,7 +241,7 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(51, 153, 255));
+        jButton4.setBackground(new java.awt.Color(255, 102, 102));
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton4.setText("Modificar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -260,7 +250,7 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(51, 153, 255));
+        jButton5.setBackground(new java.awt.Color(255, 102, 102));
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton5.setText("Borrar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -274,46 +264,53 @@ private void cargarServiciosEnTabla() {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
                     .addComponent(jTextField2)
                     .addComponent(jTextField1))
-                .addGap(228, 228, 228)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(222, 222, 222)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addGap(18, 18, 18)
-                .addComponent(jButton5)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton5)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jButtonGuardar.setBackground(new java.awt.Color(51, 153, 255));
+        jButtonGuardar.setBackground(new java.awt.Color(255, 102, 102));
         jButtonGuardar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButtonGuardar.setText("Guardar");
         jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -330,9 +327,11 @@ private void cargarServiciosEnTabla() {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(jButtonGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addGap(8, 8, 8))
                     .addComponent(jScrollPane1)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -340,7 +339,7 @@ private void cargarServiciosEnTabla() {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(395, Short.MAX_VALUE)
+                .addContainerGap(401, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -362,12 +361,11 @@ private void cargarServiciosEnTabla() {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
   // Limpiar todos los campos de texto
-    limpiarCampos(); // Llama al método que ya tienes para limpiar los campos
+    limpiarCampos();
 
     // Habilitar todos los campos para la edición
     jTextField1.setEnabled(true); // Campo ID
@@ -377,7 +375,7 @@ private void cargarServiciosEnTabla() {
     // Deseleccionar cualquier fila que pudiera estar seleccionada en la tabla
     jTable1.clearSelection();
 
-    // Establecer el servicio seleccionado a null, ya que estamos creando uno nuevo
+    // Establecer el servicio seleccionado a null, ya que se está creando uno nuevo
     servicioSeleccionado = null;
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -491,37 +489,8 @@ private void cargarServiciosEnTabla() {
     }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Servicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Servicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Servicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Servicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Servicio().setVisible(true);

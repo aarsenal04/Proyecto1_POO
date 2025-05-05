@@ -1,4 +1,3 @@
-
 package Presentacion;
 
 import Conceptos.Abogados;
@@ -8,52 +7,46 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author mayte
- */
 public class Abogado extends javax.swing.JFrame {
-    
-    private java.util.List<Conceptos.Abogados> listaAbogados;
-    private java.util.List<Conceptos.Servicios> listaServicios;
-    private Util.XMLAbogado xmlAbogado;
-    
-    private Conceptos.Abogados abogadoSeleccionado = null;
-    private javax.swing.table.DefaultTableModel tablaModelAbogados;
-    private String archivoAbogados = "Data/abogados.xml";
+
+    private java.util.List<Conceptos.Abogados> listaAbogados; // Lista de abogados
+    private java.util.List<Conceptos.Servicios> listaServicios; // Lista de servicios
+    private Util.XMLAbogado xmlAbogado; // Manejo de XML para abogados
+    private Conceptos.Abogados abogadoSeleccionado = null; // Abogado seleccionado en la tabla
+    private javax.swing.table.DefaultTableModel tablaModelAbogados; // Modelo de la tabla de abogados
+    private String archivoAbogados = "Data/abogados.xml"; // Archivo XML de abogados
 
     public Abogado(java.util.List<Conceptos.Abogados> listaAbogados, java.util.List<Conceptos.Servicios> listaServicios, Util.XMLAbogado xmlAbogado) {
-        initComponents();
-        this.setSize(1024, 768);
-        this.setLocationRelativeTo(null);
-        this.setTitle("Abogados");
-        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        this.setPreferredSize(new Dimension(1024, 768));
-        this.pack();
-        getContentPane().setLayout(null);
-        centrarElementos();
-        this.addComponentListener(new ComponentAdapter() {
+        initComponents(); // Inicializa componentes de la interfaz
+        setSize(1024, 768);
+        setLocationRelativeTo(null); // Centra la ventana
+        setTitle("Abogados");
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setPreferredSize(new Dimension(1024, 768));
+        pack(); // Ajusta el tamaño
+        getContentPane().setLayout(null); // Layout manual
+        centrarElementos(); // Posiciona los elementos
+        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos();
+                centrarElementos(); // Re-posiciona al redimensionar
             }
         });
-        this.setVisible(true);
+        setVisible(true);
         this.listaAbogados = listaAbogados;
         this.listaServicios = listaServicios;
         this.xmlAbogado = xmlAbogado;
-        
-        // inicializar el modelo de la tabla
+
+        // Inicializa el modelo de la tabla
         tablaModelAbogados = new javax.swing.table.DefaultTableModel(
-            new Object[][]{},
-            new String[]{"ID", "Nombre", "Puesto", "Teléfono"}
+                new Object[][]{},
+                new String[]{"ID", "Nombre", "Puesto", "Teléfono"} // Columnas de la tabla
         );
         jTable1.setModel(tablaModelAbogados);
 
-        // cargar los abogados desde el XML y llenar la tabla
-        cargarAbogadosEnTabla();
+        cargarAbogadosEnTabla(); // Carga y muestra los abogados
 
-        // agregar listener para la selección de filas en la tabla
+        // Listener para la selección de filas en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -61,59 +54,67 @@ public class Abogado extends javax.swing.JFrame {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
-                        // llenar los campos
+                        // Llena los campos con el abogado seleccionado
                         jTextField1.setText(abogadoSeleccionado.getidAbogado());
                         jTextField2.setText(abogadoSeleccionado.getPuestoAbogado());
                         jTextField3.setText(abogadoSeleccionado.getNombreAbogado());
                         jTextField4.setText(abogadoSeleccionado.getTelefonoAbogado());
-                        jTextField1.setEnabled(false); // ID no se puede modificar
+                        jTextField1.setEnabled(false); // ID no editable al seleccionar
                     }
                 }
             }
         });
 
-        // deshabilitar campos al inicio
-        deshabilitarCampos();
-
+        deshabilitarCampos(); // Deshabilita los campos al inicio
     }
 
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
+        int margen = 20;
 
-        // calcular el centro para el panel de entrada de datos (jPanel1)
+        // Posiciona el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
         int panelY = 100;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // calcular el centro para la tabla (jScrollPane1)
-        int tablaAncho = jScrollPane1.getPreferredSize().width;
-        int tablaAlto = jScrollPane1.getPreferredSize().height;
-        int tablaX = (ventanaAncho - tablaAncho) / 2;
-        int tablaY = panelY + panelAlto + 20;
+        // Posiciona la tabla
+        int tablaX = margen;
+        int tablaY = panelY + panelAlto + margen;
+        int tablaAncho = ventanaAncho - 2 * margen;
+        int tablaAlto = ventanaAlto - tablaY - 2 * margen - (jButton1.getPreferredSize().height + margen);
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // posicionar el botón "Salir" abajo a la derecha
-        int salirAncho = jButton1.getPreferredSize().width;
-        int salirAlto = jButton1.getPreferredSize().height;
-        int margen = 20;
-        jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
+        // Posiciona los botones
+        int botonAnchoPreferido = 150;
+        int botonAltoPreferido = 40;
+        int espacioEntreBotones = 10;
+
+        jButton2.setBounds(margen, ventanaAlto - botonAltoPreferido - margen, botonAnchoPreferido, botonAltoPreferido); // Guardar
+        jButton1.setBounds(ventanaAncho - botonAnchoPreferido - margen, ventanaAlto - botonAltoPreferido - margen, botonAnchoPreferido, botonAltoPreferido); // Salir
+        jButton3.setBounds(margen, tablaY + tablaAlto + margen, botonAnchoPreferido, botonAltoPreferido); // Nuevo
+        jButton4.setBounds((ventanaAncho - botonAnchoPreferido) / 2, tablaY + tablaAlto + margen, botonAnchoPreferido, botonAltoPreferido); // Modificar
+        jButton5.setBounds(ventanaAncho - botonAnchoPreferido - margen, tablaY + tablaAlto + margen, botonAnchoPreferido, botonAltoPreferido); // Borrar
+        verEditarServicios.setBounds(margen + botonAnchoPreferido + espacioEntreBotones, tablaY + tablaAlto + margen, botonAnchoPreferido + 50, botonAltoPreferido); // Ver/Editar Servicios
+
+        getContentPane().revalidate();
+        getContentPane().repaint();
     }
-    
+
     private void cargarAbogadosEnTabla() {
-    listaAbogados = xmlAbogado.cargarAbogados(archivoAbogados, listaServicios);
-    tablaModelAbogados.setRowCount(0); // limpiar la tabla
-    for (Conceptos.Abogados abogado : listaAbogados) {
-        tablaModelAbogados.addRow(new Object[]{
-            abogado.getidAbogado(),
-            abogado.getNombreAbogado(),
-            abogado.getPuestoAbogado(),
-            abogado.getTelefonoAbogado()
-        });
+        listaAbogados = xmlAbogado.cargarAbogados(archivoAbogados, listaServicios);
+        tablaModelAbogados.setRowCount(0); // Limpia la tabla
+        for (Conceptos.Abogados abogado : listaAbogados) {
+            tablaModelAbogados.addRow(new Object[]{
+                    abogado.getidAbogado(),
+                    abogado.getNombreAbogado(),
+                    abogado.getPuestoAbogado(),
+                    abogado.getTelefonoAbogado()
+            });
+        }
     }
-}
 
     private void deshabilitarCampos() {
         jTextField1.setEnabled(false);
@@ -146,10 +147,10 @@ public class Abogado extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
-        verEditarServicios = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        verEditarServicios = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
@@ -199,6 +200,8 @@ public class Abogado extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setBackground(new java.awt.Color(255, 255, 102));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Salir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,10 +209,15 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("ID");
 
+        jTextField1.setBackground(new java.awt.Color(255, 255, 204));
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField1.setText("Ingresar ID");
 
+        jTextField2.setBackground(new java.awt.Color(255, 255, 204));
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField2.setText("Ingresar puesto");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,8 +225,11 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Nombre");
 
+        jTextField3.setBackground(new java.awt.Color(255, 255, 204));
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField3.setText("Ingresar nombre");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,10 +237,14 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setText("Teléfono");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Puesto");
 
+        jTextField4.setBackground(new java.awt.Color(255, 255, 204));
+        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField4.setText("Ingresar teléfono");
         jTextField4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -237,13 +252,8 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
-        verEditarServicios.setText("Ver/Editar Servicios");
-        verEditarServicios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verEditarServiciosActionPerformed(evt);
-            }
-        });
-
+        jButton3.setBackground(new java.awt.Color(255, 255, 102));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,6 +261,8 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(255, 255, 102));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton4.setText("Modificar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,10 +270,21 @@ public class Abogado extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setBackground(new java.awt.Color(255, 255, 102));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton5.setText("Borrar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
+            }
+        });
+
+        verEditarServicios.setBackground(new java.awt.Color(255, 255, 102));
+        verEditarServicios.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        verEditarServicios.setText("Servicios");
+        verEditarServicios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verEditarServiciosActionPerformed(evt);
             }
         });
 
@@ -270,59 +293,62 @@ public class Abogado extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextField3)
+                    .addComponent(jTextField2)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField4))
-                        .addGap(50, 50, 50)
-                        .addComponent(verEditarServicios)
-                        .addGap(47, 47, 47))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 634, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(326, 326, 326)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(verEditarServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verEditarServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
                     .addComponent(jButton3))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
-                            .addComponent(verEditarServicios))
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton5)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton2.setBackground(new java.awt.Color(255, 255, 102));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton2.setText("Guardar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -338,17 +364,21 @@ public class Abogado extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(129, 129, 129))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1)
+                        .addGap(8, 8, 8)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(425, Short.MAX_VALUE)
+                .addContainerGap(339, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -367,15 +397,12 @@ public class Abogado extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void verEditarServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verEditarServiciosActionPerformed
