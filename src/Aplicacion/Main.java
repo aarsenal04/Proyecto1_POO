@@ -2,10 +2,10 @@ package Aplicacion;
 import Presentacion.Principal;
 
 /**
- * Proyecto 1 Programacion Orientada a Objetos
+ * Proyecto 2 Programacion Orientada a Objetos
  * @author Mayte Andrea Fernandez Angulo 2021040818
  * @author Jose David Fernández Ampie 2020032018
- * Link al repositorio: https://github.com/aarsenal04/Proyecto1_POO
+ * Link al repositorio: https://github.com/aarsenal04/Proyecto1_POO/tree/Proyecto-2
  */
 
 public class Main {
