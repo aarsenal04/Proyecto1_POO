@@ -1,3 +1,4 @@
+
 package Presentacion;
 
 import java.awt.Image;
@@ -7,6 +8,7 @@ import javax.swing.ImageIcon;
 
 public class Principal extends javax.swing.JFrame {
 
+
     public Principal() {
         initComponents(); // Inicializa componentes de la interfaz
         setLocationRelativeTo(null); // Centra la ventana
@@ -14,10 +16,9 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(null); // Layout manual
         centrarElementosPrincipal(); // Posiciona los elementos
         cargarImagenDeFondo(); // Carga la imagen de fondo
-
-        // Listener para redimensionamiento
+                // Listener para redimensionamiento
         this.addComponentListener(new ComponentAdapter() {
-            @Override
+            @Override   
             public void componentResized(ComponentEvent e) {
                 centrarElementosPrincipal(); // Re-posiciona al redimensionar
             }
@@ -25,39 +26,57 @@ public class Principal extends javax.swing.JFrame {
 
         setVisible(true); // Muestra la ventana
     }
+private void centrarElementosPrincipal() {
+    int ventanaAncho = getContentPane().getWidth();
+    int ventanaAlto = getContentPane().getHeight();
+    int margen = 20;
 
-    private void centrarElementosPrincipal() {
-        int ventanaAncho = getContentPane().getWidth();
-        int ventanaAlto = getContentPane().getHeight();
-        int margen = 20;
-        int espacioEntreBotones = 40;
-        int botonAnchoPreferido = 160;
-        int botonAltoPreferido = 45;
-        int botonSalirAnchoPreferido = 100;
-        int botonSalirAltoPreferido = 40;
-        int imagenAnchoPreferido = 400;
-        int imagenAltoPreferido = 450;
+    // --- Definimos los tamaños fijos para los botones ---
+    int espacioEntreBotones = 40;
+    int botonAlto = 45; // Altura para todos los botones
+    
+    // Ancho para los botones con texto corto
+    int botonAnchoNormal = 170; 
 
-        // Posiciona el título
-        jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
+    // Ancho específico y más grande para el botón con texto largo.
+    int botonAnchoLargo = 280; 
 
-        // Posiciona el panel de botones
-        int panelBotonesAnchoTotal = 3 * botonAnchoPreferido + 2 * espacioEntreBotones;
-        int panelBotonesX = (ventanaAncho - panelBotonesAnchoTotal) / 2;
-        int panelBotonesY = ventanaAlto / 3;
-        jButton1.setBounds(panelBotonesX, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
-        jButton2.setBounds(panelBotonesX + botonAnchoPreferido + espacioEntreBotones, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
-        jButton3.setBounds(panelBotonesX + 2 * botonAnchoPreferido + 2 * espacioEntreBotones, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
+    // --- Posiciona el título ---
+    jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
 
-        // Posiciona el botón de salir
-        salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
+    // --- Posiciona los 4 botones ---
+    int panelBotonesAnchoTotal = (3 * botonAnchoNormal) + botonAnchoLargo + (3 * espacioEntreBotones);
+    int panelBotonesX = (ventanaAncho - panelBotonesAnchoTotal) / 2;
+    int panelBotonesY = ventanaAlto / 3;
 
-        // Posiciona la imagen de fondo
-        jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 2 * margen - botonSalirAltoPreferido, imagenAnchoPreferido, imagenAltoPreferido);
+    // Botón 1: Clientes
+    btnClientes.setBounds(panelBotonesX, panelBotonesY, botonAnchoNormal, botonAlto);
+    
+    // Botón 2: Abogados
+    int posX_Boton2 = panelBotonesX + botonAnchoNormal + espacioEntreBotones;
+    btnAbogados.setBounds(posX_Boton2, panelBotonesY, botonAnchoNormal, botonAlto);
 
-        getContentPane().revalidate();
-        getContentPane().repaint();
-    }
+    // Botón 3: Servicios (con la variable corregida)
+    int posX_Boton3 = posX_Boton2 + botonAnchoNormal + espacioEntreBotones;
+    btnServicios.setBounds(posX_Boton3, panelBotonesY, botonAnchoNormal, botonAlto); // <-- CORRECCIÓN APLICADA AQUÍ
+
+    // Botón 4: Solicitudes
+    int posX_Boton4 = posX_Boton3 + botonAnchoNormal + espacioEntreBotones;
+    btnMenuServicios.setBounds(posX_Boton4, panelBotonesY, botonAnchoLargo, botonAlto);
+
+    // --- Posiciona los elementos restantes ---
+    int botonSalirAnchoPreferido = 100;
+    int botonSalirAltoPreferido = 40;
+    salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
+
+    int imagenAnchoPreferido = 400;
+    int imagenAltoPreferido = 450;
+    jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 2 * margen - botonSalirAltoPreferido, imagenAnchoPreferido, imagenAltoPreferido);
+
+    // --- Refresca la ventana ---
+    getContentPane().revalidate();
+    getContentPane().repaint();
+}
 
 private void cargarImagenDeFondo() {
     java.net.URL imageURL = getClass().getResource("/Imagenes/fondo.png");
@@ -75,47 +94,74 @@ private void cargarImagenDeFondo() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        popupMenuSolicitudes = new javax.swing.JPopupMenu();
+        popupMenuItemConsultar = new javax.swing.JMenuItem();
+        popupMenuItemSolicitar = new javax.swing.JMenuItem();
+        popupMenuItemAtender = new javax.swing.JMenuItem();
+        btnClientes = new javax.swing.JButton();
+        btnServicios = new javax.swing.JButton();
+        btnAbogados = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         salirBoton = new javax.swing.JButton();
+        btnMenuServicios = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
+        popupMenuItemConsultar.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
+        popupMenuItemConsultar.setText("Consultar");
+        popupMenuItemConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupMenuItemConsultarActionPerformed(evt);
+            }
+        });
+        popupMenuSolicitudes.add(popupMenuItemConsultar);
+
+        popupMenuItemSolicitar.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
+        popupMenuItemSolicitar.setText("Solicitar");
+        popupMenuItemSolicitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupMenuItemSolicitarActionPerformed(evt);
+            }
+        });
+        popupMenuSolicitudes.add(popupMenuItemSolicitar);
+
+        popupMenuItemAtender.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
+        popupMenuItemAtender.setText("Atender");
+        popupMenuSolicitudes.add(popupMenuItemAtender);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnClientes.setBackground(new java.awt.Color(51, 153, 255));
+        btnClientes.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnClientes.setText("Clientes");
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientesActionPerformed(evt);
+            }
+        });
+
+        btnServicios.setBackground(new java.awt.Color(255, 102, 102));
+        btnServicios.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnServicios.setText("Servicios");
+        btnServicios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnServiciosActionPerformed(evt);
+            }
+        });
+
+        btnAbogados.setBackground(new java.awt.Color(255, 255, 102));
+        btnAbogados.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnAbogados.setText("Abogados");
+        btnAbogados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbogadosActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
 
-        jButton1.setBackground(new java.awt.Color(204, 255, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton1.setText("Clientes");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setBackground(new java.awt.Color(204, 255, 204));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton3.setText("Servicios");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setBackground(new java.awt.Color(204, 255, 204));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton2.setText("Abogados");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        salirBoton.setBackground(new java.awt.Color(255, 102, 102));
-        salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        salirBoton.setBackground(new java.awt.Color(51, 153, 255));
+        salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         salirBoton.setText("Salir");
         salirBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,7 +169,19 @@ private void cargarImagenDeFondo() {
             }
         });
 
-        jLabel2.setName("fondoLabel"); // NOI18N
+        btnMenuServicios.setBackground(new java.awt.Color(0, 204, 102));
+        btnMenuServicios.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnMenuServicios.setText("Solicitudes de servicios");
+        btnMenuServicios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMenuServiciosMouseClicked(evt);
+            }
+        });
+        btnMenuServicios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuServiciosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,53 +189,59 @@ private void cargarImagenDeFondo() {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(salirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(183, 183, 183)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(130, 130, 130)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(116, 116, 116)
-                                .addComponent(jButton2))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(461, 461, 461)
-                        .addComponent(jLabel2)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                        .addGap(10, 10, 10)
+                        .addComponent(btnServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAbogados)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnMenuServicios))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)))
+                .addContainerGap(33, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(salirBoton)
+                        .addGap(27, 27, 27))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(154, 154, 154))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(240, 240, 240)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
-                .addGap(55, 55, 55)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 576, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-                .addComponent(salirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClientes)
+                    .addComponent(btnAbogados)
+                    .addComponent(btnServicios)
+                    .addComponent(btnMenuServicios))
+                .addGap(18, 18, 18)
+                .addComponent(salirBoton)
+                .addGap(12, 12, 12))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         Presentacion.Cliente ventanaClientes = new Presentacion.Cliente();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnClientesActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServiciosActionPerformed
         Presentacion.Servicio ventanaServicios = new Presentacion.Servicio();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnServiciosActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnAbogadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbogadosActionPerformed
 
         Util.XMLServicio xmlServicio = new Util.XMLServicio();
         java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
@@ -186,13 +250,29 @@ private void cargarImagenDeFondo() {
         java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
 
         Presentacion.Abogado ventanaAbogados = new Presentacion.Abogado(listaAbogados, listaServicios, xmlAbogado);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnAbogadosActionPerformed
 
     private void salirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBotonActionPerformed
         this.dispose();
     }//GEN-LAST:event_salirBotonActionPerformed
 
+    private void btnMenuServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuServiciosActionPerformed
+    }//GEN-LAST:event_btnMenuServiciosActionPerformed
+
+    private void btnMenuServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuServiciosMouseClicked
+    popupMenuSolicitudes.show(evt.getComponent(), 0, evt.getComponent().getHeight());
+    }//GEN-LAST:event_btnMenuServiciosMouseClicked
+
+    private void popupMenuItemSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemSolicitarActionPerformed
+    new Presentacion.CrearSolicitudes().setVisible(true);
+    }//GEN-LAST:event_popupMenuItemSolicitarActionPerformed
+
+    private void popupMenuItemConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemConsultarActionPerformed
+    new Presentacion.ConsultarSolicitudes().setVisible(true);
+    }//GEN-LAST:event_popupMenuItemConsultarActionPerformed
+
     public static void main(String args[]) {
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -218,11 +298,16 @@ private void cargarImagenDeFondo() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnAbogados;
+    private javax.swing.JButton btnClientes;
+    private javax.swing.JButton btnMenuServicios;
+    private javax.swing.JButton btnServicios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenuItem popupMenuItemAtender;
+    private javax.swing.JMenuItem popupMenuItemConsultar;
+    private javax.swing.JMenuItem popupMenuItemSolicitar;
+    private javax.swing.JPopupMenu popupMenuSolicitudes;
     private javax.swing.JButton salirBoton;
     // End of variables declaration//GEN-END:variables
 }
