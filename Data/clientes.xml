@@ -35,4 +35,14 @@
         <telefono>12343212</telefono>
         <email>martaq@gmail.com</email>
     </cliente>
+    <cliente id="233">
+        <nombre>dwqd</nombre>
+        <telefono>fcew</telefono>
+        <email>sadcfv</email>
+    </cliente>
+    <cliente id="5545">
+        <nombre>ggggg</nombre>
+        <telefono>5y4</telefono>
+        <email>fh</email>
+    </cliente>
 </clientes>

@@ -126,6 +126,11 @@ private void cargarImagenDeFondo() {
 
         popupMenuItemAtender.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
         popupMenuItemAtender.setText("Atender");
+        popupMenuItemAtender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupMenuItemAtenderActionPerformed(evt);
+            }
+        });
         popupMenuSolicitudes.add(popupMenuItemAtender);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -268,8 +273,12 @@ private void cargarImagenDeFondo() {
     }//GEN-LAST:event_popupMenuItemSolicitarActionPerformed
 
     private void popupMenuItemConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemConsultarActionPerformed
-    new Presentacion.ConsultarSolicitudes().setVisible(true);
+    new ConsultarSolicitudes(this, true).setVisible(true);
     }//GEN-LAST:event_popupMenuItemConsultarActionPerformed
+
+    private void popupMenuItemAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemAtenderActionPerformed
+    new Presentacion.AtenderSolicitudes().setVisible(true);
+    }//GEN-LAST:event_popupMenuItemAtenderActionPerformed
 
     public static void main(String args[]) {
 
