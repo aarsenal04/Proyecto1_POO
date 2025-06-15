@@ -155,12 +155,15 @@ public class XMLSolicitud {
                 crearElementoConTexto(doc, solicitudElem, "estado", s.getEstado());
                 crearElementoConTexto(doc, solicitudElem, "observaciones", s.getObservaciones());
 
+                // --- BLOQUE CRÍTICO PARA GUARDAR SERVICIOS ADICIONALES ---
+                // Este bloque verifica si la lista de otros servicios existe y no está vacía
                 if (s.getOtrosServicios() != null && !s.getOtrosServicios().isEmpty()) {
                     Element otrosElem = doc.createElement("otros_servicios");
+                    // Itera sobre la lista de IDs de servicios adicionales
                     for (String id : s.getOtrosServicios()) {
-                        crearElementoConTexto(doc, otrosElem, "id", id);
+                        crearElementoConTexto(doc, otrosElem, "id", id); // Crea un tag <id> por cada uno
                     }
-                    solicitudElem.appendChild(otrosElem);
+                    solicitudElem.appendChild(otrosElem); // Añade el bloque <otros_servicios> a la solicitud
                 }
 
                 root.appendChild(solicitudElem);

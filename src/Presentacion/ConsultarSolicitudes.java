@@ -1,8 +1,10 @@
 package Presentacion;
 
+import Conceptos.Abogados;
 import Conceptos.Clientes;
 import Conceptos.Servicios;
 import Conceptos.Solicitud;
+import Util.XMLAbogado;
 import Util.XMLCliente;
 import Util.XMLServicio;
 import Util.XMLSolicitud;
@@ -29,18 +31,20 @@ public class ConsultarSolicitudes extends javax.swing.JFrame {
             organizarComponentes();
             inicializarLogica();
         }
-private void organizarComponentes() {
+    private void organizarComponentes() {
     javax.swing.JPanel panelFiltros = new javax.swing.JPanel(new java.awt.GridBagLayout());
     java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
 
     gbc.insets = new java.awt.Insets(5, 8, 5, 8);
     gbc.anchor = java.awt.GridBagConstraints.WEST;
 
+    // --- Columna invisible para empujar el contenido hacia la derecha ---
     gbc.gridx = 0;
     gbc.weightx = 0.1;
     panelFiltros.add(new javax.swing.JLabel(), gbc);
     gbc.weightx = 0;
 
+    // --- Sección de Cliente (Columnas 1 a 4) ---
     gbc.gridy = 0;
     gbc.gridx = 1;
     gbc.gridwidth = 4;
@@ -52,7 +56,6 @@ private void organizarComponentes() {
     gbc.gridy = 1;
     gbc.gridx = 1; panelFiltros.add(jLabel6, gbc);
     gbc.gridx = 3; panelFiltros.add(jLabel11, gbc);
-
     gbc.gridy = 2;
     gbc.gridx = 1; panelFiltros.add(jLabel7, gbc);
     gbc.gridx = 3; panelFiltros.add(jLabel8, gbc);
@@ -60,25 +63,21 @@ private void organizarComponentes() {
     gbc.anchor = java.awt.GridBagConstraints.WEST;
     gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gbc.weightx = 1.0;
-
     gbc.gridy = 1;
     gbc.gridx = 2; panelFiltros.add(txtID, gbc);
     gbc.gridx = 4; panelFiltros.add(txtNombre, gbc);
-
     gbc.gridy = 2;
     gbc.gridx = 2; panelFiltros.add(txtEmail, gbc);
     gbc.gridx = 4; panelFiltros.add(txtTelefono, gbc);
-
     gbc.weightx = 0;
     gbc.fill = java.awt.GridBagConstraints.NONE;
 
+    // --- Sección de Servicios y Fecha (Columnas 6 y 7) ---
     gbc.anchor = java.awt.GridBagConstraints.EAST;
     gbc.gridy = 0;
-    gbc.gridx = 6; panelFiltros.add(jLabel9, gbc);
+    gbc.gridx = 6; panelFiltros.add(jLabel9, gbc); // Servicios
     gbc.gridy = 1;
-    gbc.gridx = 6; panelFiltros.add(jLabel13, gbc);
-    gbc.gridy = 2;
-    gbc.gridx = 6; panelFiltros.add(jLabel14, gbc);
+    gbc.gridx = 6; panelFiltros.add(jLabel12, gbc); // "Fechas" ahora es "Fecha"
 
     gbc.anchor = java.awt.GridBagConstraints.WEST;
     gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -86,22 +85,26 @@ private void organizarComponentes() {
     gbc.gridy = 0;
     gbc.gridx = 7; panelFiltros.add(comboEspecialidad, gbc);
     gbc.gridy = 1;
-    gbc.gridx = 7; panelFiltros.add(datePicker1, gbc);
-    gbc.gridy = 2;
-    gbc.gridx = 7; panelFiltros.add(datePicker2, gbc);
+    gbc.gridx = 7; panelFiltros.add(datePicker1, gbc); // El único DatePicker
     gbc.weightx = 0;
     gbc.fill = java.awt.GridBagConstraints.NONE;
 
+    // --- Botón de Búsqueda (Columna 8) ---
     gbc.gridx = 8;
-    gbc.gridy = 2;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+    gbc.gridheight = 2; // Ocupa 2 filas de alto
+    gbc.fill = java.awt.GridBagConstraints.VERTICAL; // Se estira verticalmente
     panelFiltros.add(btnBuscar, gbc);
-    
+    gbc.gridheight = 1; // Reseteo
+    gbc.fill = java.awt.GridBagConstraints.NONE; // Reseteo
+
+    // --- Columna invisible para empujar el contenido ---
     gbc.gridx = 9;
     gbc.weightx = 0.1;
     panelFiltros.add(new javax.swing.JLabel(), gbc);
     gbc.weightx = 0;
 
+    // --- Reconstrucción del Panel Principal ---
     jPanel6.removeAll();
     jPanel6.setLayout(new java.awt.GridBagLayout());
     java.awt.GridBagConstraints gbcMain = new java.awt.GridBagConstraints();
@@ -151,13 +154,16 @@ private void organizarComponentes() {
 
     private void cargarEspecialidades() {
         comboEspecialidad.removeAllItems();
-        comboEspecialidad.addItem("Todos"); // Opción por defecto
-        
+        // Se elimina la línea que agregaba "Todos"
+
         List<Servicios> servicios = xmlServicios.cargarServicios("Data/servicios.xml");
         for (Servicios s : servicios) {
             comboEspecialidad.addItem(s.getNombreServicio());
         }
-    }
+
+        // Hacemos que el combo aparezca vacío por defecto
+        comboEspecialidad.setSelectedIndex(-1);
+    }    
     
     private void cargarDatosIniciales() {
         List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
@@ -168,44 +174,76 @@ private void organizarComponentes() {
         actualizarTabla(this.listaCompletaSolicitudes);
     }
     
-    /**
-     * Recibe una lista de solicitudes y refresca la JTable para mostrarlas.
-     */
-    private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
-        modeloTabla.setRowCount(0); // Limpia la tabla
+// Reemplaza tu método existente con este
+private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
+    modeloTabla.setRowCount(0);
 
-        if (solicitudesAMostrar == null) return;
+    if (solicitudesAMostrar == null) {
+        return;
+    }
+    
+    // Formateador para la fecha y hora
+    java.time.format.DateTimeFormatter formatoSalida = 
+        java.time.format.DateTimeFormatter.ofPattern("d 'de' MMMM 'de' uuuu, HH:mm 'h'", new java.util.Locale("es", "ES"));
+    
+    // Cargamos todas las listas de datos que necesitaremos para la tabla
+    List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+    List<Conceptos.Estado> todosLosEstados = xmlEstados.cargarEstados("Data/estados.xml");
+    // Añadimos la carga de la lista de abogados
+    List<Abogados> todosLosAbogados = new XMLAbogado().cargarAbogados("Data/abogados.xml", todosLosServicios);
 
-        List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
-        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
-        List<Conceptos.Estado> todosLosEstados = xmlEstados.cargarEstados("Data/estados.xml");
-
-        for (Solicitud s : solicitudesAMostrar) {
-            String nombreCliente = todosLosClientes.stream()
-                .filter(c -> c.getidCliente().equals(s.getCliente()))
-                .map(Clientes::getNombreCliente)
-                .findFirst().orElse("N/A");
-
-            String nombreServicio = todosLosServicios.stream()
+    for (Solicitud s : solicitudesAMostrar) {
+        // Obtenemos el nombre del servicio
+        String nombreServicio = todosLosServicios.stream()
                 .filter(serv -> serv.getidServicio().equals(s.getServicio()))
                 .map(Servicios::getNombreServicio)
                 .findFirst().orElse("N/A");
 
-            String nombreEstado = todosLosEstados.stream()
-                    .filter(est -> est.getId().equals(s.getEstado()))
-                    .map(Conceptos.Estado::getNombre)
-                    .findFirst().orElse("N/A");
+        // Obtenemos el nombre del estado
+        String nombreEstado = todosLosEstados.stream()
+                .filter(est -> est.getId().equals(s.getEstado()))
+                .map(Conceptos.Estado::getNombre)
+                .findFirst().orElse("N/A");
 
-            Object[] fila = new Object[5];
-            fila[0] = s.getId();
-            fila[1] = nombreCliente;
-            fila[2] = s.getFechaHora();
-            fila[3] = nombreServicio;
-            fila[4] = nombreEstado;
+        // --- INICIO DE LA LÓGICA CORREGIDA PARA EL ABOGADO ---
+        String abogadoId = s.getAbogado();
+        String nombreAbogado;
 
-            modeloTabla.addRow(fila);
+        // Si la solicitud no tiene un ID de abogado asignado (es nulo o está vacío)
+        if (abogadoId == null || abogadoId.trim().isEmpty()) {
+            // Asignamos directamente el texto que solicitaste
+            nombreAbogado = "No asignado";
+        } else {
+            // Si tiene un ID, buscamos el nombre en la lista de abogados
+            nombreAbogado = todosLosAbogados.stream()
+                    .filter(a -> a.getidAbogado().equals(abogadoId))
+                    .map(Abogados::getNombreAbogado)
+                    .findFirst()
+                    // Si por alguna razón el ID existe pero no se encuentra el abogado, mostramos un error útil
+                    .orElse("ID Abogado no encontrado"); 
         }
+        // --- FIN DE LA LÓGICA CORREGIDA PARA EL ABOGADO ---
+
+        // Formateamos la fecha/hora
+        String fechaFormateada = "Fecha inválida";
+        try {
+            java.time.LocalDateTime fechaHora = java.time.LocalDateTime.parse(s.getFechaHora());
+            fechaFormateada = fechaHora.format(formatoSalida);
+        } catch (Exception e) {
+            System.err.println("No se pudo parsear la fecha: " + s.getFechaHora());
+        }
+
+        // Creamos la fila para la tabla con los datos en el orden correcto
+        Object[] fila = new Object[5];
+        fila[0] = s.getId();            // Columna 1: ID
+        fila[1] = nombreAbogado;        // Columna 2: Abogado a Cargo (o "No asignado")
+        fila[2] = fechaFormateada;      // Columna 3: Fecha / Hora
+        fila[3] = nombreServicio;       // Columna 4: Servicio
+        fila[4] = nombreEstado;         // Columna 5: Estado
+
+        modeloTabla.addRow(fila);
     }
+}
 
 @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -223,13 +261,12 @@ private void organizarComponentes() {
         jLabel9 = new javax.swing.JLabel();
         comboEspecialidad = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         salirBoton1 = new javax.swing.JButton();
-        datePicker1 = new com.github.lgooddatepicker.components.DatePicker();
-        datePicker2 = new com.github.lgooddatepicker.components.DatePicker();
+        datePicker1 = new com.github.lgooddatepicker.components.DatePicker(
+            new com.github.lgooddatepicker.components.DatePickerSettings(new java.util.Locale("es"))
+        );
         jLabel11 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
@@ -313,7 +350,7 @@ private void organizarComponentes() {
         gridBagConstraints.insets = new java.awt.Insets(23, 12, 0, 0);
         jPanel6.add(btnBuscar, gridBagConstraints);
 
-        jLabel10.setText("Cliente");
+        jLabel10.setText("Filtros con datos del Cliente");
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -343,7 +380,7 @@ private void organizarComponentes() {
         gridBagConstraints.insets = new java.awt.Insets(15, 12, 0, 0);
         jPanel6.add(comboEspecialidad, gridBagConstraints);
 
-        jLabel12.setText("Fechas");
+        jLabel12.setText("Fecha");
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 16;
@@ -352,28 +389,6 @@ private void organizarComponentes() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 18, 0, 0);
         jPanel6.add(jLabel12, gridBagConstraints);
-
-        jLabel13.setText("Desde");
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 17;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
-        jPanel6.add(jLabel13, gridBagConstraints);
-
-        jLabel14.setText("Hasta");
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 17;
-        gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.gridheight = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 12, 0, 0);
-        jPanel6.add(jLabel14, gridBagConstraints);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -404,7 +419,7 @@ private void organizarComponentes() {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombre", "Fecha", "Servicio", "Estado"
+                "ID", "Abogado a cargo", "Fecha / Hora", "Servicio", "Estado"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -442,16 +457,6 @@ private void organizarComponentes() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(13, 29, 0, 0);
         jPanel6.add(datePicker1, gridBagConstraints);
-
-        datePicker2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 24;
-        gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridheight = 11;
-        gridBagConstraints.ipadx = 129;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 29, 0, 0);
-        jPanel6.add(datePicker2, gridBagConstraints);
 
         jLabel11.setText("Nombre");
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -498,7 +503,7 @@ private void organizarComponentes() {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1012, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1173, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -510,92 +515,78 @@ private void organizarComponentes() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        String idCliente = txtID.getText().trim();
-        String nombreCliente = txtNombre.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String email = txtEmail.getText().trim();
-        String especialidad = comboEspecialidad.getSelectedItem().toString();
-        LocalDate fechaDesde = datePicker1.getDate();
-        LocalDate fechaHasta = datePicker2.getDate();
-        
-        boolean hayFiltroActivo = !idCliente.isEmpty() || !nombreCliente.isEmpty() || !telefono.isEmpty() || !email.isEmpty() ||
-                                  !especialidad.equals("Todos") || fechaDesde != null || fechaHasta != null;
+    String idCliente = txtID.getText().trim();
+    String nombreCliente = txtNombre.getText().trim().toLowerCase();
+    String telefono = txtTelefono.getText().trim();
+    String email = txtEmail.getText().trim().toLowerCase();
+    Object especialidadSeleccionada = comboEspecialidad.getSelectedItem();
+    LocalDate fechaSeleccionada = datePicker1.getDate(); // Solo una fecha
 
-        List<Solicitud> resultados = new ArrayList<>();
-        
-        if (listaCompletaSolicitudes == null) {
-            JOptionPane.showMessageDialog(this, "No hay datos de solicitudes para filtrar.", "Datos no cargados", JOptionPane.WARNING_MESSAGE);
-            return;
+    List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
+    List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+    List<Solicitud> resultados = new ArrayList<>();
+
+    for (Solicitud solicitud : listaCompletaSolicitudes) {
+        boolean pasaFiltro = true;
+
+        Clientes clienteDeSolicitud = todosLosClientes.stream()
+                .filter(c -> c.getidCliente().equals(solicitud.getCliente()))
+                .findFirst().orElse(null);
+        Servicios servicioDeSolicitud = todosLosServicios.stream()
+                .filter(s -> s.getidServicio().equals(solicitud.getServicio()))
+                .findFirst().orElse(null);
+
+        if (clienteDeSolicitud == null || servicioDeSolicitud == null) {
+            continue;
+        }
+
+        if (pasaFiltro && !idCliente.isEmpty() && !clienteDeSolicitud.getidCliente().contains(idCliente)) {
+            pasaFiltro = false;
+        }
+        if (pasaFiltro && !nombreCliente.isEmpty() && !clienteDeSolicitud.getNombreCliente().toLowerCase().contains(nombreCliente)) {
+            pasaFiltro = false;
+        }
+        if (pasaFiltro && !telefono.isEmpty() && !clienteDeSolicitud.getTelefonoCliente().contains(telefono)) {
+            pasaFiltro = false;
+        }
+        if (pasaFiltro && !email.isEmpty() && !clienteDeSolicitud.getEmailCliente().toLowerCase().contains(email)) {
+            pasaFiltro = false;
+        }
+        if (pasaFiltro && especialidadSeleccionada != null) {
+            if (!servicioDeSolicitud.getNombreServicio().equals(especialidadSeleccionada.toString())) {
+                pasaFiltro = false;
+            }
         }
         
-        List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
-        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
-        
-        for (Solicitud solicitud : listaCompletaSolicitudes) {
-            boolean pasaFiltro = true;
-
-            // buscar cliente real desde su ID
-            Clientes clienteReal = todosLosClientes.stream()
-                .filter(c -> c.getidCliente().equals(solicitud.getCliente()))
-                .findFirst()
-                .orElse(null);
-
-            // buscar servicio real desde su ID
-            Servicios servicioReal = todosLosServicios.stream()
-                .filter(s -> s.getidServicio().equals(solicitud.getServicio()))
-                .findFirst()
-                .orElse(null);
-
-            if (pasaFiltro && !idCliente.isEmpty() && (clienteReal == null || !clienteReal.getidCliente().contains(idCliente))) {
-                pasaFiltro = false;
-            }
-            if (pasaFiltro && !nombreCliente.isEmpty() && (clienteReal == null || !clienteReal.getNombreCliente().toLowerCase().contains(nombreCliente.toLowerCase()))) {
-                pasaFiltro = false;
-            }
-            if (pasaFiltro && !telefono.isEmpty() && (clienteReal == null || !clienteReal.getTelefonoCliente().contains(telefono))) {
-                pasaFiltro = false;
-            }
-            if (pasaFiltro && !email.isEmpty() && (clienteReal == null || !clienteReal.getEmailCliente().contains(email))) {
-                pasaFiltro = false;
-            }
-            if (pasaFiltro && !especialidad.equals("Todos") && (servicioReal == null || !servicioReal.getNombreServicio().equals(especialidad))) {
-                pasaFiltro = false;
-            }
-
-            // filtro por fecha
-            if (pasaFiltro && (fechaDesde != null || fechaHasta != null)) {
-                try {
-                    LocalDate fechaSolicitud = LocalDate.parse(solicitud.getFechaHora().substring(0, 10));
-                    if (fechaDesde != null && fechaSolicitud.isBefore(fechaDesde)) {
-                        pasaFiltro = false;
-                    }
-                    if (pasaFiltro && fechaHasta != null && fechaSolicitud.isAfter(fechaHasta)) {
-                        pasaFiltro = false;
-                    }
-                } catch (Exception ex) {
+        // CORRECCIÓN: Lógica para filtrar por una sola fecha
+        if (pasaFiltro && fechaSeleccionada != null) {
+            try {
+                LocalDate fechaSolicitud = LocalDate.parse(solicitud.getFechaHora().substring(0, 10));
+                if (!fechaSolicitud.equals(fechaSeleccionada)) {
                     pasaFiltro = false;
                 }
-            }
-
-            if (pasaFiltro) {
-                resultados.add(solicitud);
+            } catch (Exception e) {
+                pasaFiltro = false;
             }
         }
-        
-        if (resultados.isEmpty() && hayFiltroActivo) {
-            JOptionPane.showMessageDialog(this, "No se encontraron coincidencias para los filtros aplicados.", "Búsqueda sin Resultados", JOptionPane.INFORMATION_MESSAGE);
-            actualizarTabla(listaCompletaSolicitudes);
-        } else {
-            actualizarTabla(resultados);
-        }       
+
+        if (pasaFiltro) {
+            resultados.add(solicitud);
+        }
+    }
+    
+    boolean hayFiltroDeTexto = !idCliente.isEmpty() || !nombreCliente.isEmpty() || !telefono.isEmpty() || !email.isEmpty();
+    if (resultados.isEmpty() && (hayFiltroDeTexto || especialidadSeleccionada != null || fechaSeleccionada != null)) {
+        JOptionPane.showMessageDialog(this, "No se encontraron solicitudes que coincidan con los filtros aplicados.", "Búsqueda sin Resultados", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    actualizarTabla(resultados);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
@@ -603,7 +594,6 @@ private void organizarComponentes() {
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtIDActionPerformed
 
 
@@ -637,12 +627,9 @@ private void organizarComponentes() {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JComboBox<String> comboEspecialidad;
     private com.github.lgooddatepicker.components.DatePicker datePicker1;
-    private com.github.lgooddatepicker.components.DatePicker datePicker2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;

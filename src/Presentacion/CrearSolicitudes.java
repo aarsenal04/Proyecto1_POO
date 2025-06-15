@@ -152,11 +152,14 @@ private void inicializarComponentesPersonalizados() {
         comboCliente = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
         btnSalvar = new javax.swing.JButton();
-        dateChooser = new com.github.lgooddatepicker.components.DateTimePicker();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         btnCancelar = new javax.swing.JButton();
         btnNuevoCliente = new javax.swing.JButton();
+        dateChooser = new com.github.lgooddatepicker.components.DateTimePicker(
+            new com.github.lgooddatepicker.components.DatePickerSettings(new java.util.Locale("es")), 
+            new com.github.lgooddatepicker.components.TimePickerSettings(new java.util.Locale("es"))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Crear Solicitudes de Servicio");
@@ -172,7 +175,6 @@ private void inicializarComponentesPersonalizados() {
         gridBagConstraints.insets = new java.awt.Insets(40, 6, 0, 0);
         jPanel6.add(jLabel6, gridBagConstraints);
 
-        txtId.setEditable(false);
         txtId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -265,14 +267,6 @@ private void inicializarComponentesPersonalizados() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(80, 6, 0, 0);
         jPanel6.add(btnSalvar, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 11;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(22, 9, 0, 0);
-        jPanel6.add(dateChooser, gridBagConstraints);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -323,6 +317,14 @@ private void inicializarComponentesPersonalizados() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(50, 31, 0, 0);
         jPanel6.add(btnNuevoCliente, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 12, 0, 0);
+        jPanel6.add(dateChooser, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -330,7 +332,7 @@ private void inicializarComponentesPersonalizados() {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1042, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1122, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
