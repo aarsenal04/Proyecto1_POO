@@ -10,56 +10,38 @@ public class Principal extends javax.swing.JFrame {
 
 
     public Principal() {
-        initComponents(); // Inicializa componentes de la interfaz
-        setLocationRelativeTo(null); // Centra la ventana
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
-        getContentPane().setLayout(null); // Layout manual
-        centrarElementosPrincipal(); // Posiciona los elementos
-        cargarImagenDeFondo(); // Carga la imagen de fondo
-                // Listener para redimensionamiento
+        initComponents();
+        setLocationRelativeTo(null);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        getContentPane().setLayout(null);
+        centrarElementosPrincipal();
+        cargarImagenDeFondo();
         this.addComponentListener(new ComponentAdapter() {
             @Override   
             public void componentResized(ComponentEvent e) {
-                centrarElementosPrincipal(); // Re-posiciona al redimensionar
+                centrarElementosPrincipal();
             }
         });
 
-        setVisible(true); // Muestra la ventana
+        setVisible(true);
     }
 private void centrarElementosPrincipal() {
     int ventanaAncho = getContentPane().getWidth();
     int ventanaAlto = getContentPane().getHeight();
     int margen = 20;
 
-    // --- Definimos los tamaños fijos para los botones ---
-    int espacioEntreBotones = 40;
-    int botonAlto = 45; // Altura para todos los botones
-    
-    // Ancho para los botones con texto corto
-    int botonAnchoNormal = 170; 
 
-    // Ancho específico y más grande para el botón con texto largo.
-    int botonAnchoLargo = 280; 
-
-    // --- Posiciona el título ---
     jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
 
-    // --- Posiciona los 4 botones ---
-    int panelBotonesAnchoTotal = (3 * botonAnchoNormal) + botonAnchoLargo + (3 * espacioEntreBotones);
-    int panelBotonesX = (ventanaAncho - panelBotonesAnchoTotal) / 2;
-    int panelBotonesY = ventanaAlto / 3;
 
-
-    // --- Posiciona los elementos restantes ---
     int botonSalirAnchoPreferido = 100;
     int botonSalirAltoPreferido = 40;
     salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
 
     int imagenAnchoPreferido = 400;
     int imagenAltoPreferido = 450;
-    jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 2 * margen - botonSalirAltoPreferido, imagenAnchoPreferido, imagenAltoPreferido);
+    jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 150, imagenAnchoPreferido, imagenAltoPreferido);
 
-    // --- Refresca la ventana ---
     getContentPane().revalidate();
     getContentPane().repaint();
 }
@@ -70,7 +52,7 @@ private void cargarImagenDeFondo() {
         ImageIcon imagenIconoOriginal = new ImageIcon(imageURL);
         Image imagenOriginal = imagenIconoOriginal.getImage();
         int anchoDeseado = 400;
-        int altoDeseado = 400;
+        int altoDeseado = 450;
         Image imagenEscalada = imagenOriginal.getScaledInstance(anchoDeseado, altoDeseado, Image.SCALE_SMOOTH);
         ImageIcon imagenIconoEscalado = new ImageIcon(imagenEscalada);
         jLabel2.setIcon(imagenIconoEscalado);
@@ -110,6 +92,7 @@ private void cargarImagenDeFondo() {
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
         jMenu1.setText("Servicios");
+        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jMenuItem4.setText("Solicitar");
@@ -141,6 +124,7 @@ private void cargarImagenDeFondo() {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Util");
+        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
 
         jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jMenuItem1.setText("Servicios");
