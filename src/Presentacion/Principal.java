@@ -49,20 +49,6 @@ private void centrarElementosPrincipal() {
     int panelBotonesX = (ventanaAncho - panelBotonesAnchoTotal) / 2;
     int panelBotonesY = ventanaAlto / 3;
 
-    // Botón 1: Clientes
-    btnClientes.setBounds(panelBotonesX, panelBotonesY, botonAnchoNormal, botonAlto);
-    
-    // Botón 2: Abogados
-    int posX_Boton2 = panelBotonesX + botonAnchoNormal + espacioEntreBotones;
-    btnAbogados.setBounds(posX_Boton2, panelBotonesY, botonAnchoNormal, botonAlto);
-
-    // Botón 3: Servicios (con la variable corregida)
-    int posX_Boton3 = posX_Boton2 + botonAnchoNormal + espacioEntreBotones;
-    btnServicios.setBounds(posX_Boton3, panelBotonesY, botonAnchoNormal, botonAlto); // <-- CORRECCIÓN APLICADA AQUÍ
-
-    // Botón 4: Solicitudes
-    int posX_Boton4 = posX_Boton3 + botonAnchoNormal + espacioEntreBotones;
-    btnMenuServicios.setBounds(posX_Boton4, panelBotonesY, botonAnchoLargo, botonAlto);
 
     // --- Posiciona los elementos restantes ---
     int botonSalirAnchoPreferido = 100;
@@ -94,78 +80,25 @@ private void cargarImagenDeFondo() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        popupMenuSolicitudes = new javax.swing.JPopupMenu();
-        popupMenuItemConsultar = new javax.swing.JMenuItem();
-        popupMenuItemSolicitar = new javax.swing.JMenuItem();
-        popupMenuItemAtender = new javax.swing.JMenuItem();
-        btnClientes = new javax.swing.JButton();
-        btnServicios = new javax.swing.JButton();
-        btnAbogados = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         salirBoton = new javax.swing.JButton();
-        btnMenuServicios = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-
-        popupMenuItemConsultar.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
-        popupMenuItemConsultar.setText("Consultar");
-        popupMenuItemConsultar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                popupMenuItemConsultarActionPerformed(evt);
-            }
-        });
-        popupMenuSolicitudes.add(popupMenuItemConsultar);
-
-        popupMenuItemSolicitar.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
-        popupMenuItemSolicitar.setText("Solicitar");
-        popupMenuItemSolicitar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                popupMenuItemSolicitarActionPerformed(evt);
-            }
-        });
-        popupMenuSolicitudes.add(popupMenuItemSolicitar);
-
-        popupMenuItemAtender.setFont(new java.awt.Font("Segoe UI", 0, 21)); // NOI18N
-        popupMenuItemAtender.setText("Atender");
-        popupMenuItemAtender.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                popupMenuItemAtenderActionPerformed(evt);
-            }
-        });
-        popupMenuSolicitudes.add(popupMenuItemAtender);
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btnClientes.setBackground(new java.awt.Color(51, 153, 255));
-        btnClientes.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        btnClientes.setText("Clientes");
-        btnClientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClientesActionPerformed(evt);
-            }
-        });
-
-        btnServicios.setBackground(new java.awt.Color(255, 102, 102));
-        btnServicios.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        btnServicios.setText("Servicios");
-        btnServicios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnServiciosActionPerformed(evt);
-            }
-        });
-
-        btnAbogados.setBackground(new java.awt.Color(255, 255, 102));
-        btnAbogados.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        btnAbogados.setText("Abogados");
-        btnAbogados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAbogadosActionPerformed(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
 
-        salirBoton.setBackground(new java.awt.Color(51, 153, 255));
+        salirBoton.setBackground(new java.awt.Color(255, 102, 102));
         salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         salirBoton.setText("Salir");
         salirBoton.addActionListener(new java.awt.event.ActionListener() {
@@ -174,38 +107,79 @@ private void cargarImagenDeFondo() {
             }
         });
 
-        btnMenuServicios.setBackground(new java.awt.Color(0, 204, 102));
-        btnMenuServicios.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        btnMenuServicios.setText("Solicitudes de servicios");
-        btnMenuServicios.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMenuServiciosMouseClicked(evt);
-            }
-        });
-        btnMenuServicios.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        jMenu1.setText("Servicios");
+
+        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem4.setText("Solicitar");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMenuServiciosActionPerformed(evt);
+                jMenuItem4ActionPerformed(evt);
             }
         });
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem5.setText("Consultar");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem6.setText("Atender");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Util");
+
+        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem1.setText("Servicios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem3.setText("Abogados");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
+
+        jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem2.setText("Clientes");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(btnServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAbogados)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnMenuServicios))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)))
+                .addContainerGap()
+                .addComponent(jLabel1)
                 .addContainerGap(33, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -222,15 +196,9 @@ private void cargarImagenDeFondo() {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 576, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 537, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnClientes)
-                    .addComponent(btnAbogados)
-                    .addComponent(btnServicios)
-                    .addComponent(btnMenuServicios))
-                .addGap(18, 18, 18)
+                .addGap(71, 71, 71)
                 .addComponent(salirBoton)
                 .addGap(12, 12, 12))
         );
@@ -238,16 +206,19 @@ private void cargarImagenDeFondo() {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-        Presentacion.Cliente ventanaClientes = new Presentacion.Cliente();
-    }//GEN-LAST:event_btnClientesActionPerformed
+    private void salirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBotonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_salirBotonActionPerformed
 
-    private void btnServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServiciosActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         Presentacion.Servicio ventanaServicios = new Presentacion.Servicio();
-    }//GEN-LAST:event_btnServiciosActionPerformed
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void btnAbogadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbogadosActionPerformed
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Presentacion.Servicio ventanaServicios = new Presentacion.Servicio();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         Util.XMLServicio xmlServicio = new Util.XMLServicio();
         java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
 
@@ -255,30 +226,19 @@ private void cargarImagenDeFondo() {
         java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
 
         Presentacion.Abogado ventanaAbogados = new Presentacion.Abogado(listaAbogados, listaServicios, xmlAbogado);
-    }//GEN-LAST:event_btnAbogadosActionPerformed
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void salirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBotonActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_salirBotonActionPerformed
-
-    private void btnMenuServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuServiciosActionPerformed
-    }//GEN-LAST:event_btnMenuServiciosActionPerformed
-
-    private void btnMenuServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuServiciosMouseClicked
-    popupMenuSolicitudes.show(evt.getComponent(), 0, evt.getComponent().getHeight());
-    }//GEN-LAST:event_btnMenuServiciosMouseClicked
-
-    private void popupMenuItemSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemSolicitarActionPerformed
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
     new Presentacion.CrearSolicitudes().setVisible(true);
-    }//GEN-LAST:event_popupMenuItemSolicitarActionPerformed
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void popupMenuItemConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemConsultarActionPerformed
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
     new ConsultarSolicitudes(this, true).setVisible(true);
-    }//GEN-LAST:event_popupMenuItemConsultarActionPerformed
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void popupMenuItemAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenuItemAtenderActionPerformed
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
     new Presentacion.AtenderSolicitudes().setVisible(true);
-    }//GEN-LAST:event_popupMenuItemAtenderActionPerformed
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     public static void main(String args[]) {
 
@@ -307,16 +267,17 @@ private void cargarImagenDeFondo() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAbogados;
-    private javax.swing.JButton btnClientes;
-    private javax.swing.JButton btnMenuServicios;
-    private javax.swing.JButton btnServicios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenuItem popupMenuItemAtender;
-    private javax.swing.JMenuItem popupMenuItemConsultar;
-    private javax.swing.JMenuItem popupMenuItemSolicitar;
-    private javax.swing.JPopupMenu popupMenuSolicitudes;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JButton salirBoton;
     // End of variables declaration//GEN-END:variables
 }
