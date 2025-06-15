@@ -26,8 +26,7 @@ public class Solicitud {
     }
     
     // constructor por default
-    public Solicitud(String id, String fechaHora, String servicio, String cliente, String estado, String observaciones) {
-        this(id, fechaHora, servicio, cliente, "", estado, observaciones, null);
+    public Solicitud() {
     }
     
     // setters y getters de la clase

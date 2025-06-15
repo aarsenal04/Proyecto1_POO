@@ -6,11 +6,9 @@ import Conceptos.Solicitud;
 import Util.XMLCliente;
 import Util.XMLServicio;
 import Util.XMLSolicitud;
-import com.github.lgooddatepicker.components.DatePicker;
+import Util.XMLEstado;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,6 +22,7 @@ public class ConsultarSolicitudes extends javax.swing.JDialog {
     private XMLSolicitud xmlSolicitudes;
     private XMLServicio xmlServicios;
     private XMLCliente xmlClientes;
+    private Util.XMLEstado xmlEstados;
 
     public ConsultarSolicitudes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -35,6 +34,7 @@ public class ConsultarSolicitudes extends javax.swing.JDialog {
         this.xmlSolicitudes = new XMLSolicitud();
         this.xmlServicios = new XMLServicio();
         this.xmlClientes = new XMLCliente();
+        this.xmlEstados = new XMLEstado();
         
         this.setLocationRelativeTo(getParent());
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,7 +61,7 @@ public class ConsultarSolicitudes extends javax.swing.JDialog {
         List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
         List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
 
-        //this.listaCompletaSolicitudes = xmlSolicitudes.cargarSolicitudes("Data/solicitudes.xml", todosLosClientes, todosLosServicios);
+        this.listaCompletaSolicitudes = xmlSolicitudes.cargarSolicitudes("Data/solicitudes.xml", todosLosClientes, todosLosServicios);
         
         actualizarTabla(this.listaCompletaSolicitudes);
     }
@@ -72,19 +72,38 @@ public class ConsultarSolicitudes extends javax.swing.JDialog {
     private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
         modeloTabla.setRowCount(0); // Limpia la tabla
 
-        if (solicitudesAMostrar == null) return; // Seguridad extra
+        if (solicitudesAMostrar == null) return;
 
-        /*for (Solicitud s : solicitudesAMostrar) {
+        List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
+        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+        List<Conceptos.Estado> todosLosEstados = xmlEstados.cargarEstados("Data/estados.xml");
+
+        for (Solicitud s : solicitudesAMostrar) {
+            String nombreCliente = todosLosClientes.stream()
+                .filter(c -> c.getidCliente().equals(s.getCliente()))
+                .map(Clientes::getNombreCliente)
+                .findFirst().orElse("N/A");
+
+            String nombreServicio = todosLosServicios.stream()
+                .filter(serv -> serv.getidServicio().equals(s.getServicio()))
+                .map(Servicios::getNombreServicio)
+                .findFirst().orElse("N/A");
+
+            String nombreEstado = todosLosEstados.stream()
+                    .filter(est -> est.getId().equals(s.getEstado()))
+                    .map(Conceptos.Estado::getNombre)
+                    .findFirst().orElse("N/A");
+
             Object[] fila = new Object[5];
-            fila[0] = s.getIdSolicitud();
-            fila[1] = s.getCliente() != null ? s.getCliente().getNombreCliente() : "N/A";
-            fila[2] = s.getFechaHora(); 
-            fila[3] = s.getServicio() != null ? s.getServicio().getNombreServicio() : "N/A";
-            fila[4] = s.getEstado() != null ? s.getEstado().getNombre() : "N/A";
-            modeloTabla.addRow(fila);
-        }*/
-    }
+            fila[0] = s.getId();
+            fila[1] = nombreCliente;
+            fila[2] = s.getFechaHora();
+            fila[3] = nombreServicio;
+            fila[4] = nombreEstado;
 
+            modeloTabla.addRow(fila);
+        }
+    }
 
 @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -340,8 +359,8 @@ public class ConsultarSolicitudes extends javax.swing.JDialog {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-String idCliente = txtID.getText().trim();
-        String nombreCliente = txtNombre.getText().trim(); // <-- Campo nuevo añadido
+        String idCliente = txtID.getText().trim();
+        String nombreCliente = txtNombre.getText().trim();
         String telefono = txtTelefono.getText().trim();
         String email = txtEmail.getText().trim();
         String especialidad = comboEspecialidad.getSelectedItem().toString();
@@ -358,25 +377,41 @@ String idCliente = txtID.getText().trim();
             return;
         }
         
-        /*for (Solicitud solicitud : listaCompletaSolicitudes) {
+        List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
+        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+        
+        for (Solicitud solicitud : listaCompletaSolicitudes) {
             boolean pasaFiltro = true;
 
-            if (pasaFiltro && !idCliente.isEmpty() && (solicitud.getCliente() == null || !solicitud.getCliente().getidCliente().contains(idCliente))) {
+            // buscar cliente real desde su ID
+            Clientes clienteReal = todosLosClientes.stream()
+                .filter(c -> c.getidCliente().equals(solicitud.getCliente()))
+                .findFirst()
+                .orElse(null);
+
+            // buscar servicio real desde su ID
+            Servicios servicioReal = todosLosServicios.stream()
+                .filter(s -> s.getidServicio().equals(solicitud.getServicio()))
+                .findFirst()
+                .orElse(null);
+
+            if (pasaFiltro && !idCliente.isEmpty() && (clienteReal == null || !clienteReal.getidCliente().contains(idCliente))) {
                 pasaFiltro = false;
             }
-            if (pasaFiltro && !nombreCliente.isEmpty() && (solicitud.getCliente() == null || !solicitud.getCliente().getNombreCliente().toLowerCase().contains(nombreCliente.toLowerCase()))) {
+            if (pasaFiltro && !nombreCliente.isEmpty() && (clienteReal == null || !clienteReal.getNombreCliente().toLowerCase().contains(nombreCliente.toLowerCase()))) {
                 pasaFiltro = false;
             }
-            if (pasaFiltro && !telefono.isEmpty() && (solicitud.getCliente() == null || !solicitud.getCliente().getTelefonoCliente().contains(telefono))) {
+            if (pasaFiltro && !telefono.isEmpty() && (clienteReal == null || !clienteReal.getTelefonoCliente().contains(telefono))) {
                 pasaFiltro = false;
             }
-            if (pasaFiltro && !email.isEmpty() && (solicitud.getCliente() == null || !solicitud.getCliente().getEmailCliente().contains(email))) {
+            if (pasaFiltro && !email.isEmpty() && (clienteReal == null || !clienteReal.getEmailCliente().contains(email))) {
                 pasaFiltro = false;
             }
-            if (pasaFiltro && !especialidad.equals("Todos") && (solicitud.getServicio() == null || !solicitud.getServicio().getNombreServicio().equals(especialidad))) {
+            if (pasaFiltro && !especialidad.equals("Todos") && (servicioReal == null || !servicioReal.getNombreServicio().equals(especialidad))) {
                 pasaFiltro = false;
             }
-            
+
+            // filtro por fecha
             if (pasaFiltro && (fechaDesde != null || fechaHasta != null)) {
                 try {
                     LocalDate fechaSolicitud = LocalDate.parse(solicitud.getFechaHora().substring(0, 10));
@@ -387,15 +422,15 @@ String idCliente = txtID.getText().trim();
                         pasaFiltro = false;
                     }
                 } catch (Exception ex) {
-                    pasaFiltro = false; 
+                    pasaFiltro = false;
                 }
             }
-            
+
             if (pasaFiltro) {
                 resultados.add(solicitud);
             }
         }
-        */
+        
         if (resultados.isEmpty() && hayFiltroActivo) {
             JOptionPane.showMessageDialog(this, "No se encontraron coincidencias para los filtros aplicados.", "Búsqueda sin Resultados", JOptionPane.INFORMATION_MESSAGE);
             actualizarTabla(listaCompletaSolicitudes);

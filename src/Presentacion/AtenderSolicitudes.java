@@ -360,7 +360,7 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         Conceptos.Atender.actualizarYGuardar(listaSolicitudes, solicitudSeleccionada, "Data/solicitudes.xml");
 
         javax.swing.JOptionPane.showMessageDialog(this, "Solicitud actualizada correctamente.");
-        this.dispose();
+        //this.dispose();
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed

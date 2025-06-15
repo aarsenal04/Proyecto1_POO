@@ -3,9 +3,11 @@ package Presentacion;
 import Conceptos.Clientes;
 import Conceptos.Servicios;
 import Conceptos.Solicitud;
+import Conceptos.Estado;
 import Util.XMLCliente;
 import Util.XMLServicio;
 import Util.XMLSolicitud;
+import Util.XMLEstado;
 import java.awt.Frame;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,14 +40,7 @@ private void inicializarComponentesPersonalizados() {
     cargarClientes();
     cargarServicios();
     
-    comboCliente.addActionListener(e -> {
-        int indiceSeleccionado = comboCliente.getSelectedIndex();
-        
-        if (indiceSeleccionado != -1 && indiceSeleccionado < listaDeClientes.size()) {
-            Clientes clienteSeleccionado = listaDeClientes.get(indiceSeleccionado);
-            txtId.setText(clienteSeleccionado.getidCliente());
-        }
-    });
+    comboCliente.addActionListener(e -> {});
 
         txtId.setEditable(false);
 }
@@ -58,7 +53,7 @@ private void cargarClientes() {
     }
         if (!this.listaDeClientes.isEmpty()) {
         comboCliente.setSelectedIndex(0); 
-        txtId.setText(this.listaDeClientes.get(0).getidCliente());
+        //txtId.setText(this.listaDeClientes.get(0).getidCliente());
     }
 }
     
@@ -243,38 +238,39 @@ private void cargarClientes() {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-if (comboCliente.getSelectedIndex() == -1 || comboServicio.getSelectedIndex() == -1) {
+        if (comboCliente.getSelectedIndex() == -1 || comboServicio.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente y un servicio.", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
         if (dateChooser.getDateTimeStrict() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha y hora.", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String id = txtId.getText();
+        String id = "SOL" + System.currentTimeMillis(); // ID unico basado en timestamp
+        txtId.setText(id);  // mostrar el ID al usuario
+
         String observaciones = jTextArea1.getText();
         LocalDateTime fechaHora = dateChooser.getDateTimeStrict();
         
         Clientes clienteSeleccionado = listaDeClientes.get(comboCliente.getSelectedIndex());
         Servicios servicioSeleccionado = listaDeServicios.get(comboServicio.getSelectedIndex());
         
-        /*Estado estadoInicial = new Estado("000", "Nuevo");
+        Estado estadoInicial = new Estado("000", "Nuevo");
         
         Solicitud nuevaSolicitud = new Solicitud();
-        nuevaSolicitud.setIdSolicitud(id);
-        nuevaSolicitud.setCliente(clienteSeleccionado);
-        nuevaSolicitud.setServicio(servicioSeleccionado);
+        nuevaSolicitud.setId(id);
+        nuevaSolicitud.setCliente(clienteSeleccionado.getidCliente());
+        nuevaSolicitud.setServicio(servicioSeleccionado.getidServicio());
+        nuevaSolicitud.setEstado(estadoInicial.getId());
         nuevaSolicitud.setFechaHora(fechaHora.toString());
-        nuevaSolicitud.setEstado(estadoInicial);
         nuevaSolicitud.setObservaciones(observaciones);
         
-        if (xmlSolicitudes.agregarSolicitud(nuevaSolicitud)) {
-            JOptionPane.showMessageDialog(this, "Solicitud guardada exitosamente con el ID: " + id, "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose(); 
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al guardar la solicitud. El ID podría estar duplicado.", "Error", JOptionPane.ERROR_MESSAGE);
-        }*/
+        XMLSolicitud.guardarSolicitud(nuevaSolicitud, "Data/solicitudes.xml");
+        JOptionPane.showMessageDialog(this, "Solicitud guardada exitosamente con el ID: " + id, "Exito", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

@@ -12,4 +12,15 @@
             <id>001</id>
         </otros_servicios>
     </solicitud>
+    <solicitud id="SOL1749949693245">
+        <fecha_hora>2025-06-14T19:00</fecha_hora>
+        <servicio>101</servicio>
+        <cliente>000000000</cliente>
+        <abogado>12321</abogado>
+        <estado>005</estado>
+        <observaciones>Pension Familiar para el padre</observaciones>
+        <otros_servicios>
+            <id>100</id>
+        </otros_servicios>
+    </solicitud>
 </solicitudes>
