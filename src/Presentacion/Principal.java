@@ -30,22 +30,31 @@ private void centrarElementosPrincipal() {
     int ventanaAlto = getContentPane().getHeight();
     int margen = 20;
 
+    int botonSalirAnchoPreferido = 100;
+    int botonSalirAltoPreferido = 40;
+    int imagenAnchoPreferido = 400;
+    int imagenAltoPreferido = 450;
 
     jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
 
+    int salirBotonY = ventanaAlto - botonSalirAltoPreferido - margen;
+    salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, salirBotonY, botonSalirAnchoPreferido, botonSalirAltoPreferido);
 
-    int botonSalirAnchoPreferido = 100;
-    int botonSalirAltoPreferido = 40;
-    salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
+        int limiteSuperior = jLabel1.getY() + jLabel1.getHeight();
+    
+    int limiteInferior = salirBoton.getY();
 
-    int imagenAnchoPreferido = 400;
-    int imagenAltoPreferido = 450;
-    jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 150, imagenAnchoPreferido, imagenAltoPreferido);
+    int alturaDisponible = limiteInferior - limiteSuperior;
+    
+    int imagenY = limiteSuperior + (alturaDisponible - imagenAltoPreferido) / 2;
+
+    int imagenX = (ventanaAncho - imagenAnchoPreferido) / 2;
+    
+    jLabel2.setBounds(imagenX, imagenY, imagenAnchoPreferido, imagenAltoPreferido);
 
     getContentPane().revalidate();
     getContentPane().repaint();
 }
-
 private void cargarImagenDeFondo() {
     java.net.URL imageURL = getClass().getResource("/Imagenes/fondo.png");
     if (imageURL != null) {
@@ -67,15 +76,15 @@ private void cargarImagenDeFondo() {
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
@@ -94,15 +103,6 @@ private void cargarImagenDeFondo() {
         jMenu1.setText("Servicios");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
 
-        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jMenuItem4.setText("Solicitar");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem4);
-
         jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jMenuItem5.setText("Consultar");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +111,15 @@ private void cargarImagenDeFondo() {
             }
         });
         jMenu1.add(jMenuItem5);
+
+        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem4.setText("Solicitar");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
 
         jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jMenuItem6.setText("Atender");
@@ -213,15 +222,18 @@ private void cargarImagenDeFondo() {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-    new Presentacion.CrearSolicitudes().setVisible(true);
+    CrearSolicitudes crearSolicitudes = new CrearSolicitudes();
+    crearSolicitudes.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-    new ConsultarSolicitudes(this, true).setVisible(true);
+    ConsultarSolicitudes consultarSolicitudes = new ConsultarSolicitudes();
+    consultarSolicitudes.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-    new Presentacion.AtenderSolicitudes().setVisible(true);
+    AtenderSolicitudes atenderSolicitudes = new AtenderSolicitudes();
+    atenderSolicitudes.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     public static void main(String args[]) {

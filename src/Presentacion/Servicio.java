@@ -155,7 +155,7 @@ private void cargarServiciosEnTabla() {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -192,7 +192,7 @@ private void cargarServiciosEnTabla() {
         jTable1.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setBackground(new java.awt.Color(51, 153, 255));
+        jButton1.setBackground(new java.awt.Color(255, 153, 153));
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Salir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -201,14 +201,14 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("ID");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jTextField1.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField1.setBackground(new java.awt.Color(255, 153, 153));
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField1.setText("Ingresar ID");
 
-        jTextField2.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField2.setBackground(new java.awt.Color(255, 153, 153));
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField2.setText("Ingresar nombre");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -217,10 +217,10 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Precio");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jTextField3.setBackground(new java.awt.Color(153, 204, 255));
+        jTextField3.setBackground(new java.awt.Color(255, 153, 153));
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField3.setText("Ingresar teléfono");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -229,10 +229,10 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Nombre");
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jButton3.setBackground(new java.awt.Color(51, 153, 255));
+        jButton3.setBackground(new java.awt.Color(255, 153, 153));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -241,7 +241,7 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(51, 153, 255));
+        jButton4.setBackground(new java.awt.Color(255, 153, 153));
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton4.setText("Modificar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -250,7 +250,7 @@ private void cargarServiciosEnTabla() {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(51, 153, 255));
+        jButton5.setBackground(new java.awt.Color(255, 153, 153));
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton5.setText("Borrar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -304,7 +304,7 @@ private void cargarServiciosEnTabla() {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jButtonGuardar.setBackground(new java.awt.Color(51, 153, 255));
+        jButtonGuardar.setBackground(new java.awt.Color(255, 153, 153));
         jButtonGuardar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButtonGuardar.setText("Guardar");
         jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
