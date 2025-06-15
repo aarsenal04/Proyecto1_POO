@@ -1,3 +1,4 @@
+
 package Presentacion;
 
 import java.awt.Image;
@@ -7,57 +8,43 @@ import javax.swing.ImageIcon;
 
 public class Principal extends javax.swing.JFrame {
 
-    public Principal() {
-        initComponents(); // Inicializa componentes de la interfaz
-        setLocationRelativeTo(null); // Centra la ventana
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
-        getContentPane().setLayout(null); // Layout manual
-        centrarElementosPrincipal(); // Posiciona los elementos
-        cargarImagenDeFondo(); // Carga la imagen de fondo
 
-        // Listener para redimensionamiento
+    public Principal() {
+        initComponents();
+        setLocationRelativeTo(null);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        getContentPane().setLayout(null);
+        centrarElementosPrincipal();
+        cargarImagenDeFondo();
         this.addComponentListener(new ComponentAdapter() {
-            @Override
+            @Override   
             public void componentResized(ComponentEvent e) {
-                centrarElementosPrincipal(); // Re-posiciona al redimensionar
+                centrarElementosPrincipal();
             }
         });
 
-        setVisible(true); // Muestra la ventana
+        setVisible(true);
     }
+private void centrarElementosPrincipal() {
+    int ventanaAncho = getContentPane().getWidth();
+    int ventanaAlto = getContentPane().getHeight();
+    int margen = 20;
 
-    private void centrarElementosPrincipal() {
-        int ventanaAncho = getContentPane().getWidth();
-        int ventanaAlto = getContentPane().getHeight();
-        int margen = 20;
-        int espacioEntreBotones = 40;
-        int botonAnchoPreferido = 160;
-        int botonAltoPreferido = 45;
-        int botonSalirAnchoPreferido = 100;
-        int botonSalirAltoPreferido = 40;
-        int imagenAnchoPreferido = 400;
-        int imagenAltoPreferido = 450;
 
-        // Posiciona el título
-        jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
+    jLabel1.setBounds((ventanaAncho - jLabel1.getPreferredSize().width) / 2, margen, jLabel1.getPreferredSize().width, jLabel1.getPreferredSize().height);
 
-        // Posiciona el panel de botones
-        int panelBotonesAnchoTotal = 3 * botonAnchoPreferido + 2 * espacioEntreBotones;
-        int panelBotonesX = (ventanaAncho - panelBotonesAnchoTotal) / 2;
-        int panelBotonesY = ventanaAlto / 3;
-        jButton1.setBounds(panelBotonesX, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
-        jButton2.setBounds(panelBotonesX + botonAnchoPreferido + espacioEntreBotones, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
-        jButton3.setBounds(panelBotonesX + 2 * botonAnchoPreferido + 2 * espacioEntreBotones, panelBotonesY, botonAnchoPreferido, botonAltoPreferido);
 
-        // Posiciona el botón de salir
-        salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
+    int botonSalirAnchoPreferido = 100;
+    int botonSalirAltoPreferido = 40;
+    salirBoton.setBounds((ventanaAncho - botonSalirAnchoPreferido) / 2, ventanaAlto - botonSalirAltoPreferido - margen, botonSalirAnchoPreferido, botonSalirAltoPreferido);
 
-        // Posiciona la imagen de fondo
-        jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 2 * margen - botonSalirAltoPreferido, imagenAnchoPreferido, imagenAltoPreferido);
+    int imagenAnchoPreferido = 400;
+    int imagenAltoPreferido = 450;
+    jLabel2.setBounds((ventanaAncho - imagenAnchoPreferido) / 2, ventanaAlto - imagenAltoPreferido - 150, imagenAnchoPreferido, imagenAltoPreferido);
 
-        getContentPane().revalidate();
-        getContentPane().repaint();
-    }
+    getContentPane().revalidate();
+    getContentPane().repaint();
+}
 
 private void cargarImagenDeFondo() {
     java.net.URL imageURL = getClass().getResource("/Imagenes/fondo.png");
@@ -65,7 +52,7 @@ private void cargarImagenDeFondo() {
         ImageIcon imagenIconoOriginal = new ImageIcon(imageURL);
         Image imagenOriginal = imagenIconoOriginal.getImage();
         int anchoDeseado = 400;
-        int altoDeseado = 400;
+        int altoDeseado = 450;
         Image imagenEscalada = imagenOriginal.getScaledInstance(anchoDeseado, altoDeseado, Image.SCALE_SMOOTH);
         ImageIcon imagenIconoEscalado = new ImageIcon(imagenEscalada);
         jLabel2.setIcon(imagenIconoEscalado);
@@ -76,46 +63,25 @@ private void cargarImagenDeFondo() {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         salirBoton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel1.setText("Sistema de Gestión de Despacho de Abogados");
 
-        jButton1.setBackground(new java.awt.Color(204, 255, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton1.setText("Clientes");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setBackground(new java.awt.Color(204, 255, 204));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton3.setText("Servicios");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setBackground(new java.awt.Color(204, 255, 204));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton2.setText("Abogados");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         salirBoton.setBackground(new java.awt.Color(255, 102, 102));
-        salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        salirBoton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         salirBoton.setText("Salir");
         salirBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,62 +89,120 @@ private void cargarImagenDeFondo() {
             }
         });
 
-        jLabel2.setName("fondoLabel"); // NOI18N
+        jMenuBar1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        jMenu1.setText("Servicios");
+        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+
+        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem4.setText("Solicitar");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem5.setText("Consultar");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem6.setText("Atender");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Util");
+        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+
+        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem1.setText("Servicios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem3.setText("Abogados");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
+
+        jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem2.setText("Clientes");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(33, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(salirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(183, 183, 183)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(130, 130, 130)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(116, 116, 116)
-                                .addComponent(jButton2))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(461, 461, 461)
-                        .addComponent(jLabel2)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(salirBoton)
+                        .addGap(27, 27, 27))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(154, 154, 154))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(240, 240, 240)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
-                .addGap(55, 55, 55)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 537, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-                .addComponent(salirBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addGap(71, 71, 71)
+                .addComponent(salirBoton)
+                .addGap(12, 12, 12))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Presentacion.Cliente ventanaClientes = new Presentacion.Cliente();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void salirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBotonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_salirBotonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         Presentacion.Servicio ventanaServicios = new Presentacion.Servicio();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Presentacion.Servicio ventanaServicios = new Presentacion.Servicio();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         Util.XMLServicio xmlServicio = new Util.XMLServicio();
         java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
 
@@ -186,13 +210,22 @@ private void cargarImagenDeFondo() {
         java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
 
         Presentacion.Abogado ventanaAbogados = new Presentacion.Abogado(listaAbogados, listaServicios, xmlAbogado);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void salirBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBotonActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_salirBotonActionPerformed
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    new Presentacion.CrearSolicitudes().setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    new ConsultarSolicitudes(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    new Presentacion.AtenderSolicitudes().setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     public static void main(String args[]) {
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -218,11 +251,17 @@ private void cargarImagenDeFondo() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JButton salirBoton;
     // End of variables declaration//GEN-END:variables
 }
