@@ -13,7 +13,7 @@ import java.util.List;
 
 public class XMLSolicitud {
 
-    // cargar solicitudes desde archivo XML
+    // Cargar solicitudes desde XML
     public static List<Solicitud> cargarSolicitudes(String rutaArchivo, List<Conceptos.Clientes> todosLosClientes, List<Conceptos.Servicios> todosLosServicios) {
         List<Solicitud> listaSolicitudes = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class XMLSolicitud {
         return listaSolicitudes;
     }
 
-    // guardar una solicitud nueva en el archivo XML
+    // Añadir nueva solicitud al XML
     public static void guardarSolicitud(Solicitud nueva, String rutaArchivo) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -118,23 +118,8 @@ public class XMLSolicitud {
             e.printStackTrace();
         }
     }
-
-    // funcion para crear nodo con texto
-    private static void crearElementoConTexto(Document doc, Element padre, String etiqueta, String texto) {
-        Element elem = doc.createElement(etiqueta);
-        elem.appendChild(doc.createTextNode(texto != null ? texto : ""));
-        padre.appendChild(elem);
-    }
-
-    // funcion para leer valor de una etiqueta en xml
-    private static String getTagValue(String tag, Element elemento) {
-        NodeList nl = elemento.getElementsByTagName(tag);
-        if (nl.getLength() == 0) return "";
-        Node n = nl.item(0);
-        return (n != null) ? n.getTextContent() : "";
-    }
     
-    // reescribe el archivo entero con una lista actualizada.
+    // Guardar lista completa de solicitudes al XML
     public static void guardarListaCompleta(List<Solicitud> lista, String rutaArchivo) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -155,15 +140,12 @@ public class XMLSolicitud {
                 crearElementoConTexto(doc, solicitudElem, "estado", s.getEstado());
                 crearElementoConTexto(doc, solicitudElem, "observaciones", s.getObservaciones());
 
-                // --- BLOQUE CRÍTICO PARA GUARDAR SERVICIOS ADICIONALES ---
-                // Este bloque verifica si la lista de otros servicios existe y no está vacía
                 if (s.getOtrosServicios() != null && !s.getOtrosServicios().isEmpty()) {
                     Element otrosElem = doc.createElement("otros_servicios");
-                    // Itera sobre la lista de IDs de servicios adicionales
                     for (String id : s.getOtrosServicios()) {
-                        crearElementoConTexto(doc, otrosElem, "id", id); // Crea un tag <id> por cada uno
+                        crearElementoConTexto(doc, otrosElem, "id", id);
                     }
-                    solicitudElem.appendChild(otrosElem); // Añade el bloque <otros_servicios> a la solicitud
+                    solicitudElem.appendChild(otrosElem);
                 }
 
                 root.appendChild(solicitudElem);
@@ -181,22 +163,42 @@ public class XMLSolicitud {
         }
     }
 
+    // Crear elemento con texto
+    private static void crearElementoConTexto(Document doc, Element padre, String etiqueta, String texto) {
+        Element elem = doc.createElement(etiqueta);
+        elem.appendChild(doc.createTextNode(texto != null ? texto : ""));
+        padre.appendChild(elem);
+    }
+
+    // Obtener valor de una etiqueta XML
+    private static String getTagValue(String tag, Element elemento) {
+        NodeList nl = elemento.getElementsByTagName(tag);
+        if (nl.getLength() == 0) return "";
+        Node n = nl.item(0);
+        return (n != null) ? n.getTextContent() : "";
+    }
+
+    // Obtener fecha y hora de la solicitud
     public static String getFechaHora(Solicitud s) {
         return s.getFechaHora();
     }
 
+    // Obtener cliente de la solicitud
     public static String getCliente(Solicitud s) {
         return s.getCliente();
     }
 
+    // Obtener servicio principal de la solicitud
     public static String getServicio(Solicitud s) {
         return s.getServicio();
     }
 
+    // Obtener ID de la solicitud
     public static String getIdSolicitud(Solicitud s) {
         return s.getId();
     }
 
+    // Obtener estado de la solicitud
     public static String getEstado(Solicitud s) {
         return s.getEstado();
     }

@@ -1,23 +1,21 @@
 package Conceptos;
 
 public class Servicios {
-    
+
     private String idServicio;
     private String nombreServicio;
     private int precioServicio;
 
-    // constructor de Servicios
+    // Constructor con parámetros
     public Servicios(String idServicio, String nombreServicio, int precioServicio) {
         this.idServicio = idServicio;
         this.nombreServicio = nombreServicio;
         this.precioServicio = precioServicio;
     }
-    
-    // constructor por default
+
+    // Constructor por defecto
     public Servicios() {
     }
-    
-    // ********** setters y getters **********
 
     public void setidServicio(String idServicio) {
         this.idServicio = idServicio;
@@ -42,10 +40,11 @@ public class Servicios {
     public int getPrecioServicio() {
         return precioServicio;
     }
-    
+
+    // Representación del objeto en texto
     @Override
-    public String toString(){
+    public String toString() {
         return nombreServicio + " " + idServicio + ".";
     }
-    
+
 }

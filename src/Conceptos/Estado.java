@@ -1,16 +1,15 @@
 package Conceptos;
 
 public class Estado {
-    
+
     private String id;
     private String nombre;
 
+    // Constructor con parámetros
     public Estado(String id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
-
-    // setters y getters
 
     public String getId() {
         return id;
@@ -27,6 +26,5 @@ public class Estado {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    
+
 }

@@ -13,40 +13,48 @@ import javax.swing.event.ListSelectionListener;
 
 public class Servicio extends javax.swing.JFrame {
 
+    // --- Atributos de la clase ---
     private XMLServicio xmlServicio = new XMLServicio(); // Manejo de XML para servicios
     private DefaultTableModel tablaModelServicios; // Modelo de la tabla de servicios
     private List<Servicios> listaServiciosEnMemoria; // Lista de servicios cargados
     private Servicios servicioSeleccionado = null; // Servicio seleccionado en la tabla
     private String archivoServicios = "Data/servicios.xml"; // Archivo XML de servicios
 
-public Servicio() {
-        initComponents(); // Inicializa componentes de la interfaz
+    // Constructor de la ventana de gestión de servicios
+    public Servicio() {
+        initComponents();
+        
+        // Configuración inicial de la ventana
         setSize(1024, 768);
-        setLocationRelativeTo(null); // Centra la ventana
+        setLocationRelativeTo(null);
         setTitle("Servicios");
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setPreferredSize(new Dimension(1024, 768));
-        pack(); // Ajusta el tamaño
-        getContentPane().setLayout(null); // Layout manual
-        centrarElementos(); // Posiciona los elementos
-        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
+        pack();
+        getContentPane().setLayout(null);
+        
+        // Posicionar elementos y prepararlos para redimensionamiento
+        centrarElementos();
+        addComponentListener(new ComponentAdapter() {
+            // Listener para centrar elementos al redimensionar la ventana
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos(); // Re-posiciona al redimensionar
+                centrarElementos();
             }
         });
         setVisible(true);
 
-        // Inicializa el modelo de la tabla
+        // Configurar modelo de la tabla
         tablaModelServicios = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nombre", "Precio"} // Columnas de la tabla
+                new String[]{"ID", "Nombre", "Precio"}
         );
         jTable1.setModel(tablaModelServicios);
 
-        cargarServiciosEnTabla(); // Carga y muestra los servicios
+        // Cargar datos iniciales en la tabla
+        cargarServiciosEnTabla();
 
-        // Listener para la selección de filas en la tabla
+        // Listener para manejar la selección de un servicio en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent evt) {
@@ -54,44 +62,47 @@ public Servicio() {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         servicioSeleccionado = listaServiciosEnMemoria.get(filaSeleccionada);
-                        // Llena los campos con el servicio seleccionado
+                        // Llenar campos con el servicio seleccionado
                         jTextField1.setText(servicioSeleccionado.getidServicio());
                         jTextField2.setText(servicioSeleccionado.getNombreServicio());
                         jTextField3.setText(String.valueOf(servicioSeleccionado.getPrecioServicio()));
-                        jTextField1.setEnabled(false); // ID no editable al seleccionar
+                        // Deshabilitar ID para evitar su modificación
+                        jTextField1.setEnabled(false);
                     }
                 }
             }
         });
-
-        deshabilitarCampos(); // Deshabilita los campos al inicio
+        
+        // Estado inicial de los campos
+        deshabilitarCampos();
     }
 
+    // Centrar y distribuir los elementos en la ventana
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
+        int margen = 20;
 
-        // Posiciona el panel de entrada de datos
+        // Posicionar el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
         int panelY = 20;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Ajusta la tabla
+        // Posicionar la tabla
         int tablaX = 50;
         int tablaY = panelY + panelAlto + 20;
         int tablaAncho = ventanaAncho - 100;
         int tablaAlto = ventanaAlto - tablaY - 80;
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // Posiciona botón "Salir"
+        // Posicionar botón "Salir"
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
-        int margen = 20;
         jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
 
-        // Posiciona botón "Guardar"
+        // Posicionar botón "Guardar"
         int guardarAncho = jButtonGuardar.getPreferredSize().width;
         int guardarAlto = jButtonGuardar.getPreferredSize().height;
         jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
@@ -100,24 +111,27 @@ public Servicio() {
         getContentPane().repaint();
     }
 
-private void cargarServiciosEnTabla() {
+    // Cargar los servicios del XML y mostrarlos en la tabla
+    private void cargarServiciosEnTabla() {
         listaServiciosEnMemoria = xmlServicio.cargarServicios(archivoServicios);
-        tablaModelServicios.setRowCount(0); // Limpia la tabla
+        tablaModelServicios.setRowCount(0); // Limpiar tabla antes de cargar
         for (Servicios servicio : listaServiciosEnMemoria) {
             tablaModelServicios.addRow(new Object[]{
-                    servicio.getidServicio(),
-                    servicio.getNombreServicio(),
-                    servicio.getPrecioServicio(),
+                servicio.getidServicio(),
+                servicio.getNombreServicio(),
+                servicio.getPrecioServicio(),
             });
         }
     }
 
+    // Deshabilitar los campos de texto del formulario
     private void deshabilitarCampos() {
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
         jTextField3.setEnabled(false);
     }
 
+    // Limpiar el contenido de los campos de texto
     private void limpiarCampos() {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -345,8 +359,9 @@ private void cargarServiciosEnTabla() {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Acción del botón Salir
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    this.dispose(); // Cierra la ventana actual
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -355,133 +370,93 @@ private void cargarServiciosEnTabla() {
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
     }//GEN-LAST:event_jTextField3ActionPerformed
 
+    // Acción del botón Nuevo
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-  // Limpiar todos los campos de texto
-    limpiarCampos();
-
-    // Habilitar todos los campos para la edición
-    jTextField1.setEnabled(true); // Campo ID
-    jTextField2.setEnabled(true); // Campo Nombre
-    jTextField3.setEnabled(true); // Campo Precio
-
-    // Deseleccionar cualquier fila que pudiera estar seleccionada en la tabla
-    jTable1.clearSelection();
-
-    // Establecer el servicio seleccionado a null, ya que se está creando uno nuevo
-    servicioSeleccionado = null;
+        limpiarCampos();
+        jTextField1.setEnabled(true);
+        jTextField2.setEnabled(true);
+        jTextField3.setEnabled(true);
+        jTable1.clearSelection();
+        servicioSeleccionado = null;
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    // Acción del botón Borrar
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    // Obtener la fila seleccionada en la tabla
-    int filaSeleccionada = jTable1.getSelectedRow();
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            servicioSeleccionado = listaServiciosEnMemoria.get(filaSeleccionada);
+            int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este servicio?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
 
-    // Verificar si hay alguna fila seleccionada
-    if (filaSeleccionada != -1) {
-        // Obtener el servicio a eliminar de la lista en memoria
-        servicioSeleccionado = listaServiciosEnMemoria.get(filaSeleccionada);
-
-        // Mostrar un cuadro de diálogo de confirmación
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este servicio?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
-
-        // Si el usuario confirma la eliminación
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            // Eliminar el servicio del archivo XML
-            if (xmlServicio.eliminarServicio(servicioSeleccionado.getidServicio())) {
-                // Recargar los servicios desde el XML y actualizar la tabla
-                cargarServiciosEnTabla();
-                // Limpiar los campos de texto
-                limpiarCampos();
-                // Resetear el servicio seleccionado
-                servicioSeleccionado = null;
-                // Mostrar un mensaje de éxito
-                JOptionPane.showMessageDialog(this, "Servicio eliminado correctamente.");
-            } else {
-                // Mostrar un mensaje de error si la eliminación falla
-                JOptionPane.showMessageDialog(this, "Error al eliminar el servicio.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                if (xmlServicio.eliminarServicio(servicioSeleccionado.getidServicio())) {
+                    cargarServiciosEnTabla();
+                    limpiarCampos();
+                    servicioSeleccionado = null;
+                    JOptionPane.showMessageDialog(this, "Servicio eliminado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el servicio.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un servicio de la tabla para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-    } else {
-        // Mostrar un mensaje si no se ha seleccionado ningún servicio
-        JOptionPane.showMessageDialog(this, "Por favor, seleccione un servicio de la tabla para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-    }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    // Acción del botón Guardar
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-    // Obtener los datos de los campos de texto
-    String id = jTextField1.getText().trim();
-    String nombre = jTextField2.getText().trim();
-    String precio = jTextField3.getText().trim();
+        String id = jTextField1.getText().trim();
+        String nombre = jTextField2.getText().trim();
+        String precioStr = jTextField3.getText().trim();
 
-    // Validar que todos los campos estén llenos
-    if (id.isEmpty() || nombre.isEmpty() || precio.isEmpty() ) {
-        JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        return; // Salir del método si hay campos vacíos
-    }
-
-    // Crear un nuevo objeto Servicio con los datos ingresados
-    try {
-        int precioInt = Integer.parseInt(precio);
-        Servicios servicioNuevo = new Servicios(id, nombre, precioInt);
-        // Determinar si se está creando un nuevo servicio o modificando uno existente
-        if (servicioSeleccionado != null) { // Modo Modificar
-            // Actualizar el servicio existente en la lista en memoria
-            if (xmlServicio.actualizarServicio(servicioNuevo)) {
-                // Recargar los servicios desde el XML y actualizar la tabla
-                cargarServiciosEnTabla();
-                // Limpiar los campos de texto
-                limpiarCampos();
-                // Resetear el servicio seleccionado
-                servicioSeleccionado = null;
-                // Deshabilitar los campos después de guardar
-                deshabilitarCampos();
-                // Mostrar un mensaje de éxito
-                JOptionPane.showMessageDialog(this, "Servicio actualizado correctamente.");
-            } else {
-                // Mostrar un mensaje de error si la actualización falla
-                JOptionPane.showMessageDialog(this, "Error al actualizar el servicio.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else { // Modo Nuevo
-            // Intentar agregar el nuevo servicio al archivo XML
-            if (xmlServicio.agregarServicio(servicioNuevo)) {
-                // Recargar los servicios desde el XML y actualizar la tabla
-                cargarServiciosEnTabla();
-                // Limpiar los campos de texto
-                limpiarCampos();
-                // Deshabilitar los campos después de guardar
-                deshabilitarCampos();
-                // Mostrar un mensaje de éxito
-                JOptionPane.showMessageDialog(this, "Servicio agregado correctamente.");
-            } else {
-                // Mostrar un mensaje de error si el ID ya existe
-                JOptionPane.showMessageDialog(this, "El ID del servicio ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        if (id.isEmpty() || nombre.isEmpty() || precioStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    }
-    catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "El precio debe ser un número entero válido.", "Error", JOptionPane.ERROR_MESSAGE);
-        return; // No continuar si el precio no es un entero válido
+
+        try {
+            int precioInt = Integer.parseInt(precioStr);
+            Servicios servicioNuevo = new Servicios(id, nombre, precioInt);
+
+            if (servicioSeleccionado != null) {
+                // Modificar servicio existente
+                if (xmlServicio.actualizarServicio(servicioNuevo)) {
+                    cargarServiciosEnTabla();
+                    limpiarCampos();
+                    servicioSeleccionado = null;
+                    deshabilitarCampos();
+                    JOptionPane.showMessageDialog(this, "Servicio actualizado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al actualizar el servicio.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                // Agregar nuevo servicio
+                if (xmlServicio.agregarServicio(servicioNuevo)) {
+                    cargarServiciosEnTabla();
+                    limpiarCampos();
+                    deshabilitarCampos();
+                    JOptionPane.showMessageDialog(this, "Servicio agregado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El ID del servicio ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio debe ser un número entero válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
+    // Acción del botón Modificar
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    // Obtener la fila seleccionada en la tabla
-    int filaSeleccionada = jTable1.getSelectedRow();
-
-    // Verificar si hay alguna fila seleccionada
-    if (filaSeleccionada != -1) {
-        // Habilitar la edición de los campos (excepto el ID)
-        jTextField2.setEnabled(true); // Campo Nombre
-        jTextField3.setEnabled(true); // Campo Teléfono
-
-        // El campo ID debe permanecer deshabilitado para la modificación
-        jTextField1.setEnabled(false);
-    } else {
-        // Mostrar un mensaje si no se ha seleccionado ningún servicio
-        JOptionPane.showMessageDialog(this, "Por favor, seleccione un servicio de la tabla para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-    }
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            jTextField2.setEnabled(true);
+            jTextField3.setEnabled(true);
+            jTextField1.setEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un servicio de la tabla para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-
+    // Método principal para ejecución independiente de la ventana
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

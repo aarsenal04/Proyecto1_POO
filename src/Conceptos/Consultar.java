@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Consultar {
 
+    // Filtrar solicitudes por cliente y/o estado
     public static List<Solicitud> filtrar(List<Solicitud> solicitudes, String idCliente, String idEstado) {
         List<Solicitud> filtradas = new ArrayList<>();
 

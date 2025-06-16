@@ -3,19 +3,20 @@ package Conceptos;
 import java.util.ArrayList;
 
 public class Abogados {
-    
+
     private String idAbogado;
     private String nombreAbogado;
     private String telefonoAbogado;
     private String puestoAbogado;
-    
+
     private ArrayList<Servicios> listaServiciosAbogado;
 
-    public Abogados() { // constructor por default
+    // Constructor por defecto
+    public Abogados() {
         this.listaServiciosAbogado = new ArrayList<>();
     }
-    
-    // constructor de Abogados
+
+    // Constructor con parámetros
     public Abogados(String idAbogado, String nombreAbogado, String telefonoAbogado, String puestoAbogado, ArrayList<Servicios> listaServiciosAbogado) {
         this.idAbogado = idAbogado;
         this.nombreAbogado = nombreAbogado;
@@ -23,8 +24,6 @@ public class Abogados {
         this.puestoAbogado = puestoAbogado;
         this.listaServiciosAbogado = listaServiciosAbogado;
     }
-    
-    // ********** setters y getters **********
 
     public void setidAbogado(String idAbogado) {
         this.idAbogado = idAbogado;
@@ -65,10 +64,11 @@ public class Abogados {
     public ArrayList<Servicios> getListaServiciosAbogado() {
         return listaServiciosAbogado;
     }
-    
+
+    // Representación del objeto en texto
     @Override
-    public String toString(){
+    public String toString() {
         return nombreAbogado + " " + idAbogado + ".";
     }
-    
+
 }

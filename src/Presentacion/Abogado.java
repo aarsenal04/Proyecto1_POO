@@ -9,44 +9,54 @@ import javax.swing.JOptionPane;
 
 public class Abogado extends javax.swing.JFrame {
 
-    private java.util.List<Conceptos.Abogados> listaAbogados; // Lista de abogados
-    private java.util.List<Conceptos.Servicios> listaServicios; // Lista de servicios
-    private Util.XMLAbogado xmlAbogado; // Manejo de XML para abogados
-    private Conceptos.Abogados abogadoSeleccionado = null; // Abogado seleccionado en la tabla
-    private javax.swing.table.DefaultTableModel tablaModelAbogados; // Modelo de la tabla de abogados
-    private String archivoAbogados = "Data/abogados.xml"; // Archivo XML de abogados
+    // --- Atributos de la clase ---
+    private java.util.List<Conceptos.Abogados> listaAbogados; //Lista de abogados en memoria
+    private java.util.List<Conceptos.Servicios> listaServicios; //Lista de servicios disponibles
+    private Util.XMLAbogado xmlAbogado; //Manejador para el archivo XML de abogados
+    private Conceptos.Abogados abogadoSeleccionado = null; //Almacena el abogado seleccionado en la tabla
+    private javax.swing.table.DefaultTableModel tablaModelAbogados; //Modelo para la tabla de abogados
+    private String archivoAbogados = "Data/abogados.xml"; //Ruta del archivo de datos XML
 
+    // Constructor de la ventana de gestión de abogados
     public Abogado(java.util.List<Conceptos.Abogados> listaAbogados, java.util.List<Conceptos.Servicios> listaServicios, Util.XMLAbogado xmlAbogado) {
-        initComponents(); // Inicializa componentes de la interfaz
+        initComponents();
+
+        // Configuración inicial de la ventana
         setSize(1024, 768);
-        setLocationRelativeTo(null); // Centra la ventana
+        setLocationRelativeTo(null);
         setTitle("Abogados");
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setPreferredSize(new Dimension(1024, 768));
-        pack(); // Ajusta el tamaño
-        getContentPane().setLayout(null); // Layout manual
-        centrarElementos(); // Posiciona los elementos
-        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
+        pack();
+        getContentPane().setLayout(null);
+
+        // Posicionar elementos y prepararlos para redimensionamiento
+        centrarElementos();
+        addComponentListener(new ComponentAdapter() {
+            // Listener para centrar elementos al redimensionar la ventana
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos(); // Re-posiciona al redimensionar
+                centrarElementos();
             }
         });
         setVisible(true);
+
+        // Inicialización de datos
         this.listaAbogados = listaAbogados;
         this.listaServicios = listaServicios;
         this.xmlAbogado = xmlAbogado;
 
-        // Inicializa el modelo de la tabla
+        // Configurar modelo de la tabla
         tablaModelAbogados = new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nombre", "Puesto", "Teléfono"} // Columnas de la tabla
+                new String[]{"ID", "Nombre", "Puesto", "Teléfono"}
         );
         jTable1.setModel(tablaModelAbogados);
 
-        cargarAbogadosEnTabla(); // Carga y muestra los abogados
+        // Cargar datos iniciales en la tabla
+        cargarAbogadosEnTabla();
 
-        // Listener para la selección de filas en la tabla
+        // Listener para manejar la selección de un abogado en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -54,40 +64,43 @@ public class Abogado extends javax.swing.JFrame {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
-                        // Llena los campos con el abogado seleccionado
+                        // Llenar campos con datos del abogado seleccionado
                         jTextField1.setText(abogadoSeleccionado.getidAbogado());
                         jTextField2.setText(abogadoSeleccionado.getPuestoAbogado());
                         jTextField3.setText(abogadoSeleccionado.getNombreAbogado());
                         jTextField4.setText(abogadoSeleccionado.getTelefonoAbogado());
-                        jTextField1.setEnabled(false); // ID no editable al seleccionar
+                        // Deshabilitar ID para evitar su modificación
+                        jTextField1.setEnabled(false);
                     }
                 }
             }
         });
 
-        deshabilitarCampos(); // Deshabilita los campos al inicio
+        // Estado inicial de los campos
+        deshabilitarCampos();
     }
 
+    // Centrar y distribuir los elementos en la ventana
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
         int margen = 20;
 
-        // Posiciona el panel de entrada de datos
+        // Posicionar el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
         int panelY = 100;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Posiciona la tabla
+        // Posicionar la tabla
         int tablaX = margen;
         int tablaY = panelY + panelAlto + margen;
         int tablaAncho = ventanaAncho - 2 * margen;
         int tablaAlto = ventanaAlto - tablaY - 2 * margen - (jButton1.getPreferredSize().height + margen);
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // Posiciona los botones
+        // Posicionar los botones
         int botonAnchoPreferido = 150;
         int botonAltoPreferido = 40;
         int espacioEntreBotones = 10;
@@ -103,19 +116,21 @@ public class Abogado extends javax.swing.JFrame {
         getContentPane().repaint();
     }
 
+    // Cargar los abogados del XML y mostrarlos en la tabla
     private void cargarAbogadosEnTabla() {
         listaAbogados = xmlAbogado.cargarAbogados(archivoAbogados, listaServicios);
-        tablaModelAbogados.setRowCount(0); // Limpia la tabla
+        tablaModelAbogados.setRowCount(0); // Limpiar tabla antes de cargar
         for (Conceptos.Abogados abogado : listaAbogados) {
             tablaModelAbogados.addRow(new Object[]{
-                    abogado.getidAbogado(),
-                    abogado.getNombreAbogado(),
-                    abogado.getPuestoAbogado(),
-                    abogado.getTelefonoAbogado()
+                abogado.getidAbogado(),
+                abogado.getNombreAbogado(),
+                abogado.getPuestoAbogado(),
+                abogado.getTelefonoAbogado()
             });
         }
     }
 
+    // Deshabilitar los campos de texto del formulario
     private void deshabilitarCampos() {
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
@@ -123,13 +138,14 @@ public class Abogado extends javax.swing.JFrame {
         jTextField4.setEnabled(false);
     }
 
+    // Limpiar el contenido de los campos de texto
     private void limpiarCampos() {
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -405,8 +421,9 @@ public class Abogado extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Acción del botón Salir
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose(); // cerrar ventana
+        this.dispose(); // Cerrar la ventana actual
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -418,6 +435,7 @@ public class Abogado extends javax.swing.JFrame {
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
     }//GEN-LAST:event_jTextField4ActionPerformed
 
+    // Acción del botón Ver/Editar Servicios
     private void verEditarServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verEditarServiciosActionPerformed
         int filaSeleccionada = jTable1.getSelectedRow();
         if (filaSeleccionada == -1) {
@@ -425,20 +443,21 @@ public class Abogado extends javax.swing.JFrame {
             return;
         }
 
-        // obtener el abogado seleccionado de la lista
+        // Obtener el abogado seleccionado
         Abogados abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
 
-        // abrir el dialog para editar la lista de abogados
+        // Abrir diálogo para editar servicios
         EditarServiciosDialog dialog = new EditarServiciosDialog(
-            this,
-            abogadoSeleccionado,
-            listaServicios,
-            xmlAbogado,
-            listaAbogados
+                this,
+                abogadoSeleccionado,
+                listaServicios,
+                xmlAbogado,
+                listaAbogados
         );
         dialog.setVisible(true);
     }//GEN-LAST:event_verEditarServiciosActionPerformed
 
+    // Acción del botón Nuevo
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         limpiarCampos();
         jTextField1.setEnabled(true);
@@ -449,40 +468,43 @@ public class Abogado extends javax.swing.JFrame {
         abogadoSeleccionado = null;
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    // Acción del botón Modificar
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-    int filaSeleccionada = jTable1.getSelectedRow();
-    if (filaSeleccionada != -1) {
-        jTextField2.setEnabled(true);
-        jTextField3.setEnabled(true);
-        jTextField4.setEnabled(true);
-        jTextField1.setEnabled(false); // ID no se puede editar
-    } else {
-        JOptionPane.showMessageDialog(this, "Seleccione un abogado para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-    }
-}
-    
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    int filaSeleccionada = jTable1.getSelectedRow();
-    if (filaSeleccionada != -1) {
-        abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
-
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este abogado?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
-
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            if (xmlAbogado.eliminarAbogado(abogadoSeleccionado.getidAbogado())) {
-                cargarAbogadosEnTabla();
-                limpiarCampos();
-                abogadoSeleccionado = null;
-                JOptionPane.showMessageDialog(this, "Abogado eliminado correctamente.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Error al eliminar el abogado.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            jTextField2.setEnabled(true);
+            jTextField3.setEnabled(true);
+            jTextField4.setEnabled(true);
+            jTextField1.setEnabled(false); // ID no se puede editar
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un abogado para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Seleccione un abogado para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+
+    // Acción del botón Borrar
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            abogadoSeleccionado = listaAbogados.get(filaSeleccionada);
+
+            int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este abogado?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                if (xmlAbogado.eliminarAbogado(abogadoSeleccionado.getidAbogado())) {
+                    cargarAbogadosEnTabla();
+                    limpiarCampos();
+                    abogadoSeleccionado = null;
+                    JOptionPane.showMessageDialog(this, "Abogado eliminado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el abogado.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un abogado para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    // Acción del botón Guardar
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String id = jTextField1.getText().trim();
         String puesto = jTextField2.getText().trim();
@@ -492,14 +514,13 @@ public class Abogado extends javax.swing.JFrame {
         if (id.isEmpty() || puesto.isEmpty() || nombre.isEmpty() || telefono.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
-        } // boton de guardar
+        }
 
         ArrayList<Conceptos.Servicios> serviciosSeleccionados = abogadoSeleccionado != null ? abogadoSeleccionado.getListaServiciosAbogado() : new java.util.ArrayList<>();
-
         Conceptos.Abogados abogadoNuevo = new Conceptos.Abogados(id, nombre, telefono, puesto, serviciosSeleccionados);
 
-
-        if (abogadoSeleccionado != null) { // modificar abogado existente
+        if (abogadoSeleccionado != null) {
+            // Modificar abogado existente
             if (xmlAbogado.actualizarAbogado(abogadoNuevo)) {
                 cargarAbogadosEnTabla();
                 limpiarCampos();
@@ -510,7 +531,8 @@ public class Abogado extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Error al actualizar el abogado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else { // nuevo abogado
+        } else {
+            // Agregar nuevo abogado
             if (xmlAbogado.agregarAbogado(abogadoNuevo)) {
                 cargarAbogadosEnTabla();
                 limpiarCampos();
@@ -519,35 +541,38 @@ public class Abogado extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Abogado agregado correctamente.");
             } else {
                 JOptionPane.showMessageDialog(this, "El ID del abogado ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-public static void main(String args[]) {
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+    // Método principal para ejecución independiente de la ventana
+    public static void main(String args[]) {
+        // Establecer apariencia visual Nimbus
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (Exception ex) {
-        java.util.logging.Logger.getLogger(Abogado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        // Cargar datos y lanzar la interfaz de usuario
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                // Cargar datos para la ejecución de prueba
+                Util.XMLServicio xmlServicio = new Util.XMLServicio();
+                java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
+
+                Util.XMLAbogado xmlAbogado = new Util.XMLAbogado();
+                java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
+
+                new Abogado(listaAbogados, listaServicios, xmlAbogado).setVisible(true);
+            }
+        });
     }
-
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            // crear listas vacías de prueba para no dejar el main sin funcionar
-            Util.XMLServicio xmlServicio = new Util.XMLServicio();
-            java.util.List<Conceptos.Servicios> listaServicios = xmlServicio.cargarServicios("Data/servicios.xml");
-
-            Util.XMLAbogado xmlAbogado = new Util.XMLAbogado();
-            java.util.List<Conceptos.Abogados> listaAbogados = xmlAbogado.cargarAbogados("Data/abogados.xml", listaServicios);
-
-            new Abogado(listaAbogados, listaServicios, xmlAbogado).setVisible(true);
-        }
-    });
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

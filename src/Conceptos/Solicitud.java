@@ -3,7 +3,7 @@ package Conceptos;
 import java.util.List;
 
 public class Solicitud {
-    
+
     private String id;
     private String fechaHora;
     private String servicio;
@@ -13,7 +13,7 @@ public class Solicitud {
     private String observaciones;
     private List<String> otrosServicios;
 
-    // constructor de la clase
+    // Constructor con parámetros
     public Solicitud(String id, String fechaHora, String servicio, String cliente, String abogado, String estado, String observaciones, List<String> otrosServicios) {
         this.id = id;
         this.fechaHora = fechaHora;
@@ -24,12 +24,11 @@ public class Solicitud {
         this.observaciones = observaciones;
         this.otrosServicios = otrosServicios;
     }
-    
-    // constructor por default
+
+    // Constructor por defecto
     public Solicitud() {
     }
-    
-    // setters y getters de la clase
+
     public String getId() {
         return id;
     }

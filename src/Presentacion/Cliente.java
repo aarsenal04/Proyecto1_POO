@@ -13,40 +13,48 @@ import javax.swing.event.ListSelectionListener;
 
 public class Cliente extends javax.swing.JFrame {
 
-    private XMLCliente xmlCliente = new XMLCliente(); // Manejo de XML para clientes
-    private DefaultTableModel tablaModelClientes; // Modelo de la tabla de clientes
-    private List<Clientes> listaClientesEnMemoria; // Lista de clientes cargados
-    private Clientes clienteSeleccionado = null; // Cliente seleccionado en la tabla
-    private String archivoClientes = "Data/clientes.xml"; // Archivo XML de clientes
+    // --- Atributos de la clase ---
+    private XMLCliente xmlCliente = new XMLCliente(); // Manejador para el archivo XML de clientes
+    private DefaultTableModel tablaModelClientes; // Modelo para la tabla de clientes
+    private List<Clientes> listaClientesEnMemoria; // Lista de clientes en memoria
+    private Clientes clienteSeleccionado = null; // Almacena el cliente seleccionado en la tabla
+    private String archivoClientes = "Data/clientes.xml"; // Ruta del archivo de datos XML
 
+    // Constructor de la ventana de gestión de clientes
     public Cliente() {
-        initComponents(); // Inicializa componentes de la interfaz
+        initComponents();
+        
+        // Configuración inicial de la ventana
         setSize(1024, 768);
-        setLocationRelativeTo(null); // Centra la ventana
+        setLocationRelativeTo(null);
         setTitle("Clientes");
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Maximiza al inicio
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setPreferredSize(new Dimension(1024, 768));
-        pack(); // Ajusta el tamaño
-        getContentPane().setLayout(null); // Layout manual
-        centrarElementos(); // Posiciona los elementos
-        addComponentListener(new ComponentAdapter() { // Listener para redimensionamiento
+        pack();
+        getContentPane().setLayout(null);
+        
+        // Posicionar elementos y prepararlos para redimensionamiento
+        centrarElementos();
+        addComponentListener(new ComponentAdapter() {
+            // Listener para centrar elementos al redimensionar la ventana
             @Override
             public void componentResized(ComponentEvent e) {
-                centrarElementos(); // Re-posiciona al redimensionar
+                centrarElementos();
             }
         });
         setVisible(true);
 
-        // Inicializa el modelo de la tabla
+        // Configurar modelo de la tabla
         tablaModelClientes = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nombre", "Teléfono", "Email"} // Columnas de la tabla
+                new String[]{"ID", "Nombre", "Teléfono", "Email"}
         );
         jTable1.setModel(tablaModelClientes);
 
-        cargarClientesEnTabla(); // Carga y muestra los clientes
+        // Cargar datos iniciales en la tabla
+        cargarClientesEnTabla();
 
-        // Listener para la selección de filas en la tabla
+        // Listener para manejar la selección de un cliente en la tabla
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent evt) {
@@ -54,45 +62,48 @@ public class Cliente extends javax.swing.JFrame {
                     int filaSeleccionada = jTable1.getSelectedRow();
                     if (filaSeleccionada != -1) {
                         clienteSeleccionado = listaClientesEnMemoria.get(filaSeleccionada);
-                        // Llena los campos con el cliente seleccionado
+                        // Llenar campos con datos del cliente seleccionado
                         jTextField1.setText(clienteSeleccionado.getidCliente());
                         jTextField2.setText(clienteSeleccionado.getNombreCliente());
                         jTextField3.setText(clienteSeleccionado.getTelefonoCliente());
                         jTextField4.setText(clienteSeleccionado.getEmailCliente());
-                        jTextField1.setEnabled(false); // ID no editable al seleccionar
+                        // Deshabilitar ID para evitar su modificación
+                        jTextField1.setEnabled(false);
                     }
                 }
             }
         });
 
-        deshabilitarCampos(); // Deshabilita los campos al inicio
+        // Estado inicial de los campos
+        deshabilitarCampos();
     }
 
+    // Centrar y distribuir los elementos en la ventana
     private void centrarElementos() {
         int ventanaAncho = getContentPane().getWidth();
         int ventanaAlto = getContentPane().getHeight();
         int margen = 20;
 
-        // Posiciona el panel de entrada de datos
+        // Posicionar el panel de entrada de datos
         int panelAncho = jPanel1.getPreferredSize().width;
         int panelAlto = jPanel1.getPreferredSize().height;
         int panelX = (ventanaAncho - panelAncho) / 2;
         int panelY = 20;
         jPanel1.setBounds(panelX, panelY, panelAncho, panelAlto);
 
-        // Ajusta la tabla
+        // Posicionar la tabla
         int tablaX = 50;
         int tablaY = panelY + panelAlto + 20;
         int tablaAncho = ventanaAncho - 100;
         int tablaAlto = ventanaAlto - tablaY - 80;
         jScrollPane1.setBounds(tablaX, tablaY, tablaAncho, tablaAlto);
 
-        // Posiciona botón "Salir"
+        // Posicionar botón "Salir"
         int salirAncho = jButton1.getPreferredSize().width;
         int salirAlto = jButton1.getPreferredSize().height;
         jButton1.setBounds(ventanaAncho - salirAncho - margen, ventanaAlto - salirAlto - margen, salirAncho, salirAlto);
 
-        // Posiciona botón "Guardar"
+        // Posicionar botón "Guardar"
         int guardarAncho = jButtonGuardar.getPreferredSize().width;
         int guardarAlto = jButtonGuardar.getPreferredSize().height;
         jButtonGuardar.setBounds(margen, ventanaAlto - guardarAlto - margen, guardarAncho, guardarAlto);
@@ -101,19 +112,21 @@ public class Cliente extends javax.swing.JFrame {
         getContentPane().repaint();
     }
 
+    // Cargar los clientes del XML y mostrarlos en la tabla
     private void cargarClientesEnTabla() {
         listaClientesEnMemoria = xmlCliente.cargarClientes(archivoClientes);
-        tablaModelClientes.setRowCount(0); // Limpia la tabla
+        tablaModelClientes.setRowCount(0); // Limpiar tabla antes de cargar
         for (Clientes cliente : listaClientesEnMemoria) {
             tablaModelClientes.addRow(new Object[]{
-                    cliente.getidCliente(),
-                    cliente.getNombreCliente(),
-                    cliente.getTelefonoCliente(),
-                    cliente.getEmailCliente()
+                cliente.getidCliente(),
+                cliente.getNombreCliente(),
+                cliente.getTelefonoCliente(),
+                cliente.getEmailCliente()
             });
         }
     }
 
+    // Deshabilitar los campos de texto del formulario
     private void deshabilitarCampos() {
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
@@ -121,6 +134,7 @@ public class Cliente extends javax.swing.JFrame {
         jTextField4.setEnabled(false);
     }
 
+    // Limpiar el contenido de los campos de texto
     private void limpiarCampos() {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -370,8 +384,9 @@ public class Cliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Acción del botón Salir
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    this.dispose(); // Cierra la ventana actual
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -383,130 +398,93 @@ public class Cliente extends javax.swing.JFrame {
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
     }//GEN-LAST:event_jTextField4ActionPerformed
 
+    // Acción del botón Nuevo
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // Limpiar todos los campos de texto
-          limpiarCampos();
-
-          // Habilitar todos los campos para la edición
-          jTextField1.setEnabled(true); // Campo ID
-          jTextField2.setEnabled(true); // Campo Nombre
-          jTextField3.setEnabled(true); // Campo Teléfono
-          jTextField4.setEnabled(true); // Campo Email
-
-          // Deseleccionar cualquier fila que pudiera estar seleccionada en la tabla
-          jTable1.clearSelection();
-
-          // Establecer el cliente seleccionado a null, ya que se está creando uno nuevo
-          clienteSeleccionado = null;
+        limpiarCampos();
+        jTextField1.setEnabled(true);
+        jTextField2.setEnabled(true);
+        jTextField3.setEnabled(true);
+        jTextField4.setEnabled(true);
+        jTable1.clearSelection();
+        clienteSeleccionado = null;
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    // Acción del botón Borrar
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // Obtener la fila seleccionada en la tabla
         int filaSeleccionada = jTable1.getSelectedRow();
-
-        // Verificar si hay alguna fila seleccionada
         if (filaSeleccionada != -1) {
-            // Obtener el cliente a eliminar de la lista en memoria
             clienteSeleccionado = listaClientesEnMemoria.get(filaSeleccionada);
-
-            // Mostrar un cuadro de diálogo de confirmación
             int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este cliente?", "Confirmar Borrado", JOptionPane.YES_NO_OPTION);
 
-            // Si el usuario confirma la eliminación
             if (confirmacion == JOptionPane.YES_OPTION) {
-                // Eliminar el cliente del archivo XML
+                // Eliminar del XML y recargar
                 if (xmlCliente.eliminarCliente(clienteSeleccionado.getidCliente())) {
-                    // Recargar los clientes desde el XML y actualizar la tabla
                     cargarClientesEnTabla();
-                    // Limpiar los campos de texto
                     limpiarCampos();
-                    // Resetear el cliente seleccionado
                     clienteSeleccionado = null;
-                    // Mostrar un mensaje de éxito
                     JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente.");
                 } else {
-                    // Mostrar un mensaje de error si la eliminación falla
                     JOptionPane.showMessageDialog(this, "Error al eliminar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            // Mostrar un mensaje si no se ha seleccionado ningún cliente
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para borrar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    // Acción del botón Guardar
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        // Obtener los datos de los campos de texto
         String id = jTextField1.getText().trim();
         String nombre = jTextField2.getText().trim();
         String telefono = jTextField3.getText().trim();
         String email = jTextField4.getText().trim();
 
-        // Validar que todos los campos estén llenos
         if (id.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            return; // Salir del método si hay campos vacíos
+            return;
         }
 
-        // Crear un nuevo objeto Cliente con los datos ingresados
         Clientes clienteNuevo = new Clientes(id, nombre, telefono, email);
 
-        // Determinar si se está creando un nuevo cliente o modificando uno existente
-        if (clienteSeleccionado != null) { // Modo Modificar
-            // Actualizar el cliente existente en la lista en memoria
+        if (clienteSeleccionado != null) {
+            // Modificar cliente existente
             if (xmlCliente.actualizarCliente(clienteNuevo)) {
-                // Recargar los clientes desde el XML y actualizar la tabla
                 cargarClientesEnTabla();
-                // Limpiar los campos de texto
                 limpiarCampos();
-                // Resetear el cliente seleccionado
                 clienteSeleccionado = null;
-                // Deshabilitar los campos después de guardar
                 deshabilitarCampos();
-                // Mostrar un mensaje de éxito
                 JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.");
             } else {
-                // Mostrar un mensaje de error si la actualización falla
                 JOptionPane.showMessageDialog(this, "Error al actualizar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else { // Modo Nuevo
-            // Intentar agregar el nuevo cliente al archivo XML
+        } else {
+            // Agregar nuevo cliente
             if (xmlCliente.agregarCliente(clienteNuevo)) {
-                // Recargar los clientes desde el XML y actualizar la tabla
                 cargarClientesEnTabla();
-                // Limpiar los campos de texto
                 limpiarCampos();
-                // Deshabilitar los campos después de guardar
                 deshabilitarCampos();
-                // Mostrar un mensaje de éxito
                 JOptionPane.showMessageDialog(this, "Cliente agregado correctamente.");
             } else {
-                // Mostrar un mensaje de error si el ID ya existe
                 JOptionPane.showMessageDialog(this, "El ID del cliente ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
+    // Acción del botón Modificar
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // Obtener la fila seleccionada en la tabla
         int filaSeleccionada = jTable1.getSelectedRow();
-
-        // Verificar si hay alguna fila seleccionada
         if (filaSeleccionada != -1) {
-            // Habilitar la edición de los campos (excepto el ID)
-            jTextField2.setEnabled(true); // Campo Nombre
-            jTextField3.setEnabled(true); // Campo Teléfono
-            jTextField4.setEnabled(true); // Campo Email
-
-            // El campo ID debe permanecer deshabilitado para la modificación
+            // Habilitar campos para edición
+            jTextField2.setEnabled(true);
+            jTextField3.setEnabled(true);
+            jTextField4.setEnabled(true);
             jTextField1.setEnabled(false);
         } else {
-            // Mostrar un mensaje si no se ha seleccionado ningún cliente
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un cliente de la tabla para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-
+    // Método principal para ejecución independiente de la ventana
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

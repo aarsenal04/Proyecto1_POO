@@ -1,13 +1,13 @@
 package Conceptos;
 
 public class Clientes {
-    
+
     private String idCliente;
     private String nombreCliente;
     private String telefonoCliente;
     private String emailCliente;
 
-    // Constructor de Clientes
+    // Constructor con parámetros
     public Clientes(String idCliente, String nombreCliente, String telefonoCliente, String emailCliente) {
         this.idCliente = idCliente;
         this.nombreCliente = nombreCliente;
@@ -15,11 +15,9 @@ public class Clientes {
         this.emailCliente = emailCliente;
     }
 
-    // Constructor por default
+    // Constructor por defecto
     public Clientes() {
     }
-    
-    // ********** setters y getters **********
 
     public void setidCliente(String idCliente) {
         this.idCliente = idCliente;
@@ -52,9 +50,10 @@ public class Clientes {
     public String getEmailCliente() {
         return emailCliente;
     }
-    
+
+    // Representación del objeto en texto
     @Override
-    public String toString(){
+    public String toString() {
         return nombreCliente + " " + idCliente + ".";
     }
 }

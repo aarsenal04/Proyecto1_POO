@@ -10,6 +10,7 @@ import java.util.List;
 
 public class XMLEstado {
 
+    // Cargar estados desde XML
     public List<Estado> cargarEstados(String rutaArchivo) {
         List<Estado> listaEstados = new ArrayList<>();
 

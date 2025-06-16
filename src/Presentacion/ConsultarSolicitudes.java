@@ -14,238 +14,195 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 import java.util.List;
 
 public class ConsultarSolicitudes extends javax.swing.JFrame {
 
-    private List<Solicitud> listaCompletaSolicitudes;
-    private DefaultTableModel modeloTabla;
-    private XMLSolicitud xmlSolicitudes;
-    private XMLServicio xmlServicios;
-    private XMLCliente xmlClientes;
-    private Util.XMLEstado xmlEstados;
+    // --- Atributos de la clase ---
+    private List<Solicitud> listaCompletaSolicitudes; // Lista completa de solicitudes en memoria
+    private DefaultTableModel modeloTabla; // Modelo para la tabla de resultados
+    private XMLSolicitud xmlSolicitudes; // Manejador para el archivo XML de solicitudes
+    private XMLServicio xmlServicios; // Manejador para el archivo XML de servicios
+    private XMLCliente xmlClientes; // Manejador para el archivo XML de clientes
+    private Util.XMLEstado xmlEstados; // Manejador para el archivo XML de estados
 
-        public ConsultarSolicitudes() {
-            initComponents();
-            organizarComponentes();
-            inicializarLogica();
-        }
+    // Constructor de la ventana de consulta de solicitudes
+    public ConsultarSolicitudes() {
+        initComponents();
+        organizarComponentes();
+        inicializarLogica();
+    }
+
+    // Organizar y distribuir los componentes en la ventana
     private void organizarComponentes() {
-    javax.swing.JPanel panelFiltros = new javax.swing.JPanel(new java.awt.GridBagLayout());
-    java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        javax.swing.JPanel panelFiltros = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
 
-    gbc.insets = new java.awt.Insets(5, 8, 5, 8);
-    gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.insets = new java.awt.Insets(5, 8, 5, 8);
+        gbc.anchor = java.awt.GridBagConstraints.WEST;
 
-    // --- Columna invisible para empujar el contenido hacia la derecha ---
-    gbc.gridx = 0;
-    gbc.weightx = 0.1;
-    panelFiltros.add(new javax.swing.JLabel(), gbc);
-    gbc.weightx = 0;
+        gbc.gridx = 0; gbc.weightx = 0.1; panelFiltros.add(new javax.swing.JLabel(), gbc);
+        gbc.weightx = 0;
 
-    // --- Sección de Cliente (Columnas 1 a 4) ---
-    gbc.gridy = 0;
-    gbc.gridx = 1;
-    gbc.gridwidth = 4;
-    gbc.anchor = java.awt.GridBagConstraints.CENTER;
-    panelFiltros.add(jLabel10, gbc);
-    gbc.gridwidth = 1;
-    gbc.anchor = java.awt.GridBagConstraints.EAST;
+        gbc.gridy = 0; gbc.gridx = 1; gbc.gridwidth = 4;
+        gbc.anchor = java.awt.GridBagConstraints.CENTER;
+        panelFiltros.add(jLabel10, gbc);
+        gbc.gridwidth = 1; gbc.anchor = java.awt.GridBagConstraints.EAST;
+        gbc.gridy = 1; gbc.gridx = 1; panelFiltros.add(jLabel6, gbc);
+        gbc.gridx = 3; panelFiltros.add(jLabel11, gbc);
+        gbc.gridy = 2; gbc.gridx = 1; panelFiltros.add(jLabel7, gbc);
+        gbc.gridx = 3; panelFiltros.add(jLabel8, gbc);
 
-    gbc.gridy = 1;
-    gbc.gridx = 1; panelFiltros.add(jLabel6, gbc);
-    gbc.gridx = 3; panelFiltros.add(jLabel11, gbc);
-    gbc.gridy = 2;
-    gbc.gridx = 1; panelFiltros.add(jLabel7, gbc);
-    gbc.gridx = 3; panelFiltros.add(jLabel8, gbc);
+        gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.gridy = 1; gbc.gridx = 2; panelFiltros.add(txtID, gbc);
+        gbc.gridx = 4; panelFiltros.add(txtNombre, gbc);
+        gbc.gridy = 2; gbc.gridx = 2; panelFiltros.add(txtEmail, gbc);
+        gbc.gridx = 4; panelFiltros.add(txtTelefono, gbc);
+        gbc.weightx = 0; gbc.fill = java.awt.GridBagConstraints.NONE;
 
-    gbc.anchor = java.awt.GridBagConstraints.WEST;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gbc.weightx = 1.0;
-    gbc.gridy = 1;
-    gbc.gridx = 2; panelFiltros.add(txtID, gbc);
-    gbc.gridx = 4; panelFiltros.add(txtNombre, gbc);
-    gbc.gridy = 2;
-    gbc.gridx = 2; panelFiltros.add(txtEmail, gbc);
-    gbc.gridx = 4; panelFiltros.add(txtTelefono, gbc);
-    gbc.weightx = 0;
-    gbc.fill = java.awt.GridBagConstraints.NONE;
+        gbc.anchor = java.awt.GridBagConstraints.EAST;
+        gbc.gridy = 0; gbc.gridx = 6; panelFiltros.add(jLabel9, gbc);
+        gbc.gridy = 1; gbc.gridx = 6; panelFiltros.add(jLabel12, gbc);
+        
+        gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.gridy = 0; gbc.gridx = 7; panelFiltros.add(comboEspecialidad, gbc);
+        gbc.gridy = 1; gbc.gridx = 7; panelFiltros.add(datePicker1, gbc);
+        gbc.weightx = 0; gbc.fill = java.awt.GridBagConstraints.NONE;
 
-    // --- Sección de Servicios y Fecha (Columnas 6 y 7) ---
-    gbc.anchor = java.awt.GridBagConstraints.EAST;
-    gbc.gridy = 0;
-    gbc.gridx = 6; panelFiltros.add(jLabel9, gbc); // Servicios
-    gbc.gridy = 1;
-    gbc.gridx = 6; panelFiltros.add(jLabel12, gbc); // "Fechas" ahora es "Fecha"
+        gbc.gridx = 8; gbc.gridy = 0; gbc.gridheight = 2;
+        gbc.fill = java.awt.GridBagConstraints.VERTICAL;
+        panelFiltros.add(btnBuscar, gbc);
+        gbc.gridheight = 1; gbc.fill = java.awt.GridBagConstraints.NONE;
 
-    gbc.anchor = java.awt.GridBagConstraints.WEST;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gbc.weightx = 1.0;
-    gbc.gridy = 0;
-    gbc.gridx = 7; panelFiltros.add(comboEspecialidad, gbc);
-    gbc.gridy = 1;
-    gbc.gridx = 7; panelFiltros.add(datePicker1, gbc); // El único DatePicker
-    gbc.weightx = 0;
-    gbc.fill = java.awt.GridBagConstraints.NONE;
+        gbc.gridx = 9; gbc.weightx = 0.1; panelFiltros.add(new javax.swing.JLabel(), gbc);
+        gbc.weightx = 0;
 
-    // --- Botón de Búsqueda (Columna 8) ---
-    gbc.gridx = 8;
-    gbc.gridy = 0;
-    gbc.gridheight = 2; // Ocupa 2 filas de alto
-    gbc.fill = java.awt.GridBagConstraints.VERTICAL; // Se estira verticalmente
-    panelFiltros.add(btnBuscar, gbc);
-    gbc.gridheight = 1; // Reseteo
-    gbc.fill = java.awt.GridBagConstraints.NONE; // Reseteo
+        jPanel6.removeAll();
+        jPanel6.setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbcMain = new java.awt.GridBagConstraints();
 
-    // --- Columna invisible para empujar el contenido ---
-    gbc.gridx = 9;
-    gbc.weightx = 0.1;
-    panelFiltros.add(new javax.swing.JLabel(), gbc);
-    gbc.weightx = 0;
+        gbcMain.gridy = 0; gbcMain.gridx = 0; gbcMain.weightx = 1.0;
+        gbcMain.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbcMain.anchor = java.awt.GridBagConstraints.NORTH;
+        gbcMain.insets = new java.awt.Insets(20, 10, 10, 10);
+        jPanel6.add(panelFiltros, gbcMain);
 
-    // --- Reconstrucción del Panel Principal ---
-    jPanel6.removeAll();
-    jPanel6.setLayout(new java.awt.GridBagLayout());
-    java.awt.GridBagConstraints gbcMain = new java.awt.GridBagConstraints();
+        gbcMain.gridy = 1; gbcMain.weighty = 1.0;
+        gbcMain.fill = java.awt.GridBagConstraints.BOTH;
+        gbcMain.insets = new java.awt.Insets(0, 10, 0, 10);
+        jPanel6.add(jScrollPane1, gbcMain);
 
-    gbcMain.gridy = 0;
-    gbcMain.gridx = 0;
-    gbcMain.weightx = 1.0;
-    gbcMain.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gbcMain.anchor = java.awt.GridBagConstraints.NORTH;
-    gbcMain.insets = new java.awt.Insets(20, 10, 10, 10);
-    jPanel6.add(panelFiltros, gbcMain);
+        gbcMain.gridy = 2; gbcMain.weighty = 0;
+        gbcMain.fill = java.awt.GridBagConstraints.NONE;
+        gbcMain.anchor = java.awt.GridBagConstraints.SOUTHEAST;
+        gbcMain.insets = new java.awt.Insets(10, 10, 10, 10);
+        jPanel6.add(salirBoton1, gbcMain);
+    }
 
-    gbcMain.gridy = 1;
-    gbcMain.weighty = 1.0;
-    gbcMain.fill = java.awt.GridBagConstraints.BOTH;
-    gbcMain.insets = new java.awt.Insets(0, 10, 0, 10);
-    jPanel6.add(jScrollPane1, gbcMain);
-
-    gbcMain.gridy = 2;
-    gbcMain.weighty = 0;
-    gbcMain.fill = java.awt.GridBagConstraints.NONE;
-    gbcMain.anchor = java.awt.GridBagConstraints.SOUTHEAST;
-    gbcMain.insets = new java.awt.Insets(10, 10, 10, 10);
-    jPanel6.add(salirBoton1, gbcMain);
-}
-
+    // Inicializar manejadores XML, configurar ventana y cargar datos iniciales
     private void inicializarLogica() {
         this.xmlSolicitudes = new XMLSolicitud();
         this.xmlServicios = new XMLServicio();
         this.xmlClientes = new XMLCliente();
         this.xmlEstados = new XMLEstado();
 
-    // --- CONFIGURACIÓN DE LA VENTANA ---
-    this.setTitle("Consultar Solicitudes de Servicio");
-    this.setSize(1024, 768); // Tamaño cuando no está maximizada
-    this.setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia maximizada
-    this.setLocationRelativeTo(null); // Centra la ventana
-    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setTitle("Consultar Solicitudes de Servicio");
+        this.setSize(1024, 768);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    this.modeloTabla = (DefaultTableModel) jTable1.getModel();
+        this.modeloTabla = (DefaultTableModel) jTable1.getModel();
 
-    cargarEspecialidades();
-    cargarDatosIniciales();
+        cargarEspecialidades();
+        cargarDatosIniciales();
 
-    salirBoton1.addActionListener(e -> this.dispose());
-}
+        salirBoton1.addActionListener(e -> this.dispose());
+    }
 
+    // Cargar las especialidades de servicios en el ComboBox
     private void cargarEspecialidades() {
         comboEspecialidad.removeAllItems();
-        // Se elimina la línea que agregaba "Todos"
-
         List<Servicios> servicios = xmlServicios.cargarServicios("Data/servicios.xml");
         for (Servicios s : servicios) {
             comboEspecialidad.addItem(s.getNombreServicio());
         }
-
-        // Hacemos que el combo aparezca vacío por defecto
         comboEspecialidad.setSelectedIndex(-1);
-    }    
-    
+    }
+
+    // Cargar todas las solicitudes y mostrarlas en la tabla
     private void cargarDatosIniciales() {
         List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
         List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
-
         this.listaCompletaSolicitudes = xmlSolicitudes.cargarSolicitudes("Data/solicitudes.xml", todosLosClientes, todosLosServicios);
-        
         actualizarTabla(this.listaCompletaSolicitudes);
     }
-    
-// Reemplaza tu método existente con este
-private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
-    modeloTabla.setRowCount(0);
 
-    if (solicitudesAMostrar == null) {
-        return;
-    }
-    
-    // Formateador para la fecha y hora
-    java.time.format.DateTimeFormatter formatoSalida = 
-        java.time.format.DateTimeFormatter.ofPattern("d 'de' MMMM 'de' uuuu, HH:mm 'h'", new java.util.Locale("es", "ES"));
-    
-    // Cargamos todas las listas de datos que necesitaremos para la tabla
-    List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
-    List<Conceptos.Estado> todosLosEstados = xmlEstados.cargarEstados("Data/estados.xml");
-    // Añadimos la carga de la lista de abogados
-    List<Abogados> todosLosAbogados = new XMLAbogado().cargarAbogados("Data/abogados.xml", todosLosServicios);
+    // Refrescar la tabla con una lista de solicitudes
+    private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
+        modeloTabla.setRowCount(0);
+        if (solicitudesAMostrar == null) return;
 
-    for (Solicitud s : solicitudesAMostrar) {
-        // Obtenemos el nombre del servicio
-        String nombreServicio = todosLosServicios.stream()
-                .filter(serv -> serv.getidServicio().equals(s.getServicio()))
-                .map(Servicios::getNombreServicio)
-                .findFirst().orElse("N/A");
+        // Definir formato de fecha para la tabla
+        java.time.format.DateTimeFormatter formatoSalida =
+                java.time.format.DateTimeFormatter.ofPattern("d 'de' MMMM 'de' uuuu, HH:mm 'h'", new java.util.Locale("es", "ES"));
 
-        // Obtenemos el nombre del estado
-        String nombreEstado = todosLosEstados.stream()
-                .filter(est -> est.getId().equals(s.getEstado()))
-                .map(Conceptos.Estado::getNombre)
-                .findFirst().orElse("N/A");
+        // Cargar datos necesarios para obtener nombres
+        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+        List<Conceptos.Estado> todosLosEstados = xmlEstados.cargarEstados("Data/estados.xml");
+        List<Abogados> todosLosAbogados = new XMLAbogado().cargarAbogados("Data/abogados.xml", todosLosServicios);
 
-        // --- INICIO DE LA LÓGICA CORREGIDA PARA EL ABOGADO ---
-        String abogadoId = s.getAbogado();
-        String nombreAbogado;
+        for (Solicitud s : solicitudesAMostrar) {
+            // Buscar nombre del servicio por ID
+            String nombreServicio = todosLosServicios.stream()
+                    .filter(serv -> serv.getidServicio().equals(s.getServicio()))
+                    .map(Servicios::getNombreServicio)
+                    .findFirst().orElse("N/A");
 
-        // Si la solicitud no tiene un ID de abogado asignado (es nulo o está vacío)
-        if (abogadoId == null || abogadoId.trim().isEmpty()) {
-            // Asignamos directamente el texto que solicitaste
-            nombreAbogado = "No asignado";
-        } else {
-            // Si tiene un ID, buscamos el nombre en la lista de abogados
-            nombreAbogado = todosLosAbogados.stream()
-                    .filter(a -> a.getidAbogado().equals(abogadoId))
-                    .map(Abogados::getNombreAbogado)
-                    .findFirst()
-                    // Si por alguna razón el ID existe pero no se encuentra el abogado, mostramos un error útil
-                    .orElse("ID Abogado no encontrado"); 
+            // Buscar nombre del estado por ID
+            String nombreEstado = todosLosEstados.stream()
+                    .filter(est -> est.getId().equals(s.getEstado()))
+                    .map(Conceptos.Estado::getNombre)
+                    .findFirst().orElse("N/A");
+
+            // Buscar nombre del abogado por ID, o mostrar "No asignado"
+            String abogadoId = s.getAbogado();
+            String nombreAbogado;
+            if (abogadoId == null || abogadoId.trim().isEmpty()) {
+                nombreAbogado = "No asignado";
+            } else {
+                nombreAbogado = todosLosAbogados.stream()
+                        .filter(a -> a.getidAbogado().equals(abogadoId))
+                        .map(Abogados::getNombreAbogado)
+                        .findFirst()
+                        .orElse("ID Abogado no encontrado");
+            }
+
+            // Formatear la fecha para visualización
+            String fechaFormateada = "Fecha inválida";
+            try {
+                java.time.LocalDateTime fechaHora = java.time.LocalDateTime.parse(s.getFechaHora());
+                fechaFormateada = fechaHora.format(formatoSalida);
+            } catch (Exception e) {
+                System.err.println("No se pudo parsear la fecha: " + s.getFechaHora());
+            }
+            
+            // Añadir fila a la tabla
+            Object[] fila = new Object[5];
+            fila[0] = s.getId();
+            fila[1] = nombreAbogado;
+            fila[2] = fechaFormateada;
+            fila[3] = nombreServicio;
+            fila[4] = nombreEstado;
+            modeloTabla.addRow(fila);
         }
-        // --- FIN DE LA LÓGICA CORREGIDA PARA EL ABOGADO ---
-
-        // Formateamos la fecha/hora
-        String fechaFormateada = "Fecha inválida";
-        try {
-            java.time.LocalDateTime fechaHora = java.time.LocalDateTime.parse(s.getFechaHora());
-            fechaFormateada = fechaHora.format(formatoSalida);
-        } catch (Exception e) {
-            System.err.println("No se pudo parsear la fecha: " + s.getFechaHora());
-        }
-
-        // Creamos la fila para la tabla con los datos en el orden correcto
-        Object[] fila = new Object[5];
-        fila[0] = s.getId();            // Columna 1: ID
-        fila[1] = nombreAbogado;        // Columna 2: Abogado a Cargo (o "No asignado")
-        fila[2] = fechaFormateada;      // Columna 3: Fecha / Hora
-        fila[3] = nombreServicio;       // Columna 4: Servicio
-        fila[4] = nombreEstado;         // Columna 5: Estado
-
-        modeloTabla.addRow(fila);
     }
-}
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -520,85 +477,69 @@ private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
     }//GEN-LAST:event_txtNombreActionPerformed
 
+    // Acción del botón Buscar para filtrar las solicitudes
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-    String idCliente = txtID.getText().trim();
-    String nombreCliente = txtNombre.getText().trim().toLowerCase();
-    String telefono = txtTelefono.getText().trim();
-    String email = txtEmail.getText().trim().toLowerCase();
-    Object especialidadSeleccionada = comboEspecialidad.getSelectedItem();
-    LocalDate fechaSeleccionada = datePicker1.getDate(); // Solo una fecha
+        String idCliente = txtID.getText().trim();
+        String nombreCliente = txtNombre.getText().trim().toLowerCase();
+        String telefono = txtTelefono.getText().trim();
+        String email = txtEmail.getText().trim().toLowerCase();
+        Object especialidadSeleccionada = comboEspecialidad.getSelectedItem();
+        LocalDate fechaSeleccionada = datePicker1.getDate();
 
-    List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
-    List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
-    List<Solicitud> resultados = new ArrayList<>();
+        List<Clientes> todosLosClientes = xmlClientes.cargarClientes("Data/clientes.xml");
+        List<Servicios> todosLosServicios = xmlServicios.cargarServicios("Data/servicios.xml");
+        List<Solicitud> resultados = new ArrayList<>();
 
-    for (Solicitud solicitud : listaCompletaSolicitudes) {
-        boolean pasaFiltro = true;
+        for (Solicitud solicitud : listaCompletaSolicitudes) {
+            boolean pasaFiltro = true;
 
-        Clientes clienteDeSolicitud = todosLosClientes.stream()
-                .filter(c -> c.getidCliente().equals(solicitud.getCliente()))
-                .findFirst().orElse(null);
-        Servicios servicioDeSolicitud = todosLosServicios.stream()
-                .filter(s -> s.getidServicio().equals(solicitud.getServicio()))
-                .findFirst().orElse(null);
+            Clientes clienteDeSolicitud = todosLosClientes.stream()
+                    .filter(c -> c.getidCliente().equals(solicitud.getCliente()))
+                    .findFirst().orElse(null);
+            Servicios servicioDeSolicitud = todosLosServicios.stream()
+                    .filter(s -> s.getidServicio().equals(solicitud.getServicio()))
+                    .findFirst().orElse(null);
 
-        if (clienteDeSolicitud == null || servicioDeSolicitud == null) {
-            continue;
-        }
-
-        if (pasaFiltro && !idCliente.isEmpty() && !clienteDeSolicitud.getidCliente().contains(idCliente)) {
-            pasaFiltro = false;
-        }
-        if (pasaFiltro && !nombreCliente.isEmpty() && !clienteDeSolicitud.getNombreCliente().toLowerCase().contains(nombreCliente)) {
-            pasaFiltro = false;
-        }
-        if (pasaFiltro && !telefono.isEmpty() && !clienteDeSolicitud.getTelefonoCliente().contains(telefono)) {
-            pasaFiltro = false;
-        }
-        if (pasaFiltro && !email.isEmpty() && !clienteDeSolicitud.getEmailCliente().toLowerCase().contains(email)) {
-            pasaFiltro = false;
-        }
-        if (pasaFiltro && especialidadSeleccionada != null) {
-            if (!servicioDeSolicitud.getNombreServicio().equals(especialidadSeleccionada.toString())) {
-                pasaFiltro = false;
+            if (clienteDeSolicitud == null || servicioDeSolicitud == null) continue;
+            
+            if (pasaFiltro && !idCliente.isEmpty() && !clienteDeSolicitud.getidCliente().contains(idCliente)) pasaFiltro = false;
+            if (pasaFiltro && !nombreCliente.isEmpty() && !clienteDeSolicitud.getNombreCliente().toLowerCase().contains(nombreCliente)) pasaFiltro = false;
+            if (pasaFiltro && !telefono.isEmpty() && !clienteDeSolicitud.getTelefonoCliente().contains(telefono)) pasaFiltro = false;
+            if (pasaFiltro && !email.isEmpty() && !clienteDeSolicitud.getEmailCliente().toLowerCase().contains(email)) pasaFiltro = false;
+            if (pasaFiltro && especialidadSeleccionada != null) {
+                if (!servicioDeSolicitud.getNombreServicio().equals(especialidadSeleccionada.toString())) pasaFiltro = false;
             }
-        }
-        
-        // CORRECCIÓN: Lógica para filtrar por una sola fecha
-        if (pasaFiltro && fechaSeleccionada != null) {
-            try {
-                LocalDate fechaSolicitud = LocalDate.parse(solicitud.getFechaHora().substring(0, 10));
-                if (!fechaSolicitud.equals(fechaSeleccionada)) {
+            if (pasaFiltro && fechaSeleccionada != null) {
+                try {
+                    LocalDate fechaSolicitud = LocalDate.parse(solicitud.getFechaHora().substring(0, 10));
+                    if (!fechaSolicitud.equals(fechaSeleccionada)) pasaFiltro = false;
+                } catch (Exception e) {
                     pasaFiltro = false;
                 }
-            } catch (Exception e) {
-                pasaFiltro = false;
+            }
+
+            if (pasaFiltro) {
+                resultados.add(solicitud);
             }
         }
 
-        if (pasaFiltro) {
-            resultados.add(solicitud);
+        boolean hayFiltroDeTexto = !idCliente.isEmpty() || !nombreCliente.isEmpty() || !telefono.isEmpty() || !email.isEmpty();
+        if (resultados.isEmpty() && (hayFiltroDeTexto || especialidadSeleccionada != null || fechaSeleccionada != null)) {
+            JOptionPane.showMessageDialog(this, "No se encontraron solicitudes que coincidan con los filtros aplicados.", "Búsqueda sin Resultados", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-    
-    boolean hayFiltroDeTexto = !idCliente.isEmpty() || !nombreCliente.isEmpty() || !telefono.isEmpty() || !email.isEmpty();
-    if (resultados.isEmpty() && (hayFiltroDeTexto || especialidadSeleccionada != null || fechaSeleccionada != null)) {
-        JOptionPane.showMessageDialog(this, "No se encontraron solicitudes que coincidan con los filtros aplicados.", "Búsqueda sin Resultados", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    actualizarTabla(resultados);
+
+        actualizarTabla(resultados);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
-
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
     }//GEN-LAST:event_txtIDActionPerformed
 
-
+    // Método principal para ejecución independiente de la ventana
     public static void main(String args[]) {
-
+        // Establecer apariencia visual Nimbus
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -616,6 +557,7 @@ private void actualizarTabla(List<Solicitud> solicitudesAMostrar) {
             java.util.logging.Logger.getLogger(ConsultarSolicitudes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
+        // Lanzar la interfaz de usuario
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ConsultarSolicitudes().setVisible(true);

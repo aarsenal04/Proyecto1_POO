@@ -14,13 +14,16 @@ import java.util.List;
 public class XMLAbogado {
 
     private List<Abogados> listaAbogados = new ArrayList<>();
+    // Para tener la ruta disponible para guardar
     private String rutaArchivoGuardado;
 
+    // Constructor vacío
     public XMLAbogado() {
-        // Constructor vacío
     }
 
+    // Cargar abogados desde XML
     public List<Abogados> cargarAbogados(String rutaArchivo, List<Servicios> serviciosDisponibles) {
+        // Guardar la ruta para usarla al guardar
         this.rutaArchivoGuardado = rutaArchivo;
         listaAbogados.clear();
         try {
@@ -55,6 +58,7 @@ public class XMLAbogado {
         return listaAbogados;
     }
 
+    // Guardar abogados al XML
     public void guardarAbogados(String rutaArchivo, List<Abogados> abogados) {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -95,19 +99,23 @@ public class XMLAbogado {
         }
     }
 
+    // Agregar nuevo abogado
     public boolean agregarAbogado(Abogados nuevo) {
         if (buscarPorId(nuevo.getidAbogado()) == null) {
             listaAbogados.add(nuevo);
+            // Guardar al XML
             guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
             return true;
         }
         return false;
     }
 
+    // Actualizar abogado existente
     public boolean actualizarAbogado(Abogados actualizado) {
         for (int i = 0; i < listaAbogados.size(); i++) {
             if (listaAbogados.get(i).getidAbogado().equals(actualizado.getidAbogado())) {
                 listaAbogados.set(i, actualizado);
+                // Guardar al XML
                 guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
                 return true;
             }
@@ -115,16 +123,19 @@ public class XMLAbogado {
         return false;
     }
 
+    // Eliminar abogado por ID
     public boolean eliminarAbogado(String id) {
         Abogados abogadoAEliminar = buscarPorId(id);
         if (abogadoAEliminar != null) {
             listaAbogados.remove(abogadoAEliminar);
+            // Guardar al XML
             guardarAbogados(this.rutaArchivoGuardado, listaAbogados);
             return true;
         }
         return false;
     }
 
+    // Buscar abogado por ID
     public Abogados buscarPorId(String id) {
         for (Abogados ab : listaAbogados) {
             if (ab.getidAbogado().equals(id)) return ab;
@@ -132,6 +143,7 @@ public class XMLAbogado {
         return null;
     }
 
+    // Obtener lista actual de abogados en memoria
     public List<Abogados> getListaAbogados() {
         return listaAbogados;
     }

@@ -9,135 +9,117 @@ import Conceptos.Solicitud;
 import Conceptos.Abogados;
 import Conceptos.Servicios;
 import Conceptos.Estado;
-import java.awt.Color; // Importamos la clase Color
-import javax.swing.JFrame; // Importamos JFrame para usar sus constantes
+import java.awt.Color;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
 public class AtenderSolicitudes extends javax.swing.JFrame {
-    
-    private List<Conceptos.Solicitud> listaSolicitudes;
-    private List<Conceptos.Abogados> listaAbogados;
-    private List<Conceptos.Servicios> listaServicios;
-    private List<Conceptos.Estado> listaEstados;
-    private Conceptos.Solicitud solicitudSeleccionada;
 
+    // --- Atributos de la clase ---
+    private List<Conceptos.Solicitud> listaSolicitudes; // Lista de todas las solicitudes en memoria
+    private List<Conceptos.Abogados> listaAbogados; // Lista de todos los abogados disponibles
+    private List<Conceptos.Servicios> listaServicios; // Lista de todos los servicios disponibles
+    private List<Conceptos.Estado> listaEstados; // Lista de todos los estados posibles
+    private Conceptos.Solicitud solicitudSeleccionada; // Almacena la solicitud activa que se está atendiendo
+
+    // Constructor de la ventana para atender solicitudes
     public AtenderSolicitudes() {
         initComponents();
-        cargarDatos();        // 1. Primero, cargamos toda la información de los archivos XML.
-        configuracionInicial(); // 2. Después, configuramos la interfaz, que ahora sí puede usar los datos cargados.
+        // Cargar todos los datos desde los archivos XML
+        cargarDatos();
+        // Configurar la interfaz de usuario y sus componentes
+        configuracionInicial();
     }
 
+    // Organizar y distribuir los componentes en la ventana
     private void organizarComponentes() {
-    getContentPane().removeAll();
-    getContentPane().setLayout(new java.awt.GridBagLayout());
-    java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 
-    gbc.insets = new java.awt.Insets(5, 5, 5, 5);
+        // Crear y posicionar panel superior
+        javax.swing.JPanel panelSuperior = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbcSuperior = new java.awt.GridBagConstraints();
+        gbcSuperior.insets = new java.awt.Insets(5, 5, 5, 5);
+        gbcSuperior.anchor = java.awt.GridBagConstraints.WEST;
+        gbcSuperior.gridy = 0; gbcSuperior.gridx = 0; panelSuperior.add(jLabelIDServicio, gbcSuperior);
+        gbcSuperior.gridx = 2; panelSuperior.add(jLabelID, gbcSuperior);
+        gbcSuperior.gridy = 1; gbcSuperior.gridx = 0; panelSuperior.add(jLabelServicio, gbcSuperior);
+        gbcSuperior.gridx = 2; panelSuperior.add(jLabelFechaHora, gbcSuperior);
+        gbcSuperior.gridy = 2; gbcSuperior.gridx = 0; panelSuperior.add(jLabelAbogado, gbcSuperior);
+        gbcSuperior.gridx = 2; panelSuperior.add(jLabelEstado, gbcSuperior);
+        gbcSuperior.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbcSuperior.weightx = 1.0;
+        gbcSuperior.gridy = 0; gbcSuperior.gridx = 1; panelSuperior.add(comboIDServicio, gbcSuperior);
+        gbcSuperior.gridx = 3; panelSuperior.add(jTextFieldID, gbcSuperior);
+        gbcSuperior.gridy = 1; gbcSuperior.gridx = 1; panelSuperior.add(comboServicio, gbcSuperior);
+        gbcSuperior.gridx = 3; panelSuperior.add(dateChooser, gbcSuperior);
+        gbcSuperior.gridy = 2; gbcSuperior.gridx = 1; panelSuperior.add(comboAbogado, gbcSuperior);
+        gbcSuperior.gridx = 3; panelSuperior.add(comboEstado, gbcSuperior);
 
-    javax.swing.JPanel panelSuperior = new javax.swing.JPanel(new java.awt.GridBagLayout());
-    java.awt.GridBagConstraints gbcSuperior = new java.awt.GridBagConstraints();
-    gbcSuperior.insets = new java.awt.Insets(5, 5, 5, 5);
-    gbcSuperior.anchor = java.awt.GridBagConstraints.WEST;
+        // Añadir panel superior a la ventana
+        gbc.gridy = 0; gbc.gridx = 0; gbc.weightx = 1.0;
+        gbc.anchor = java.awt.GridBagConstraints.NORTH;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(panelSuperior, gbc);
 
-    gbcSuperior.gridy = 0;
-    gbcSuperior.gridx = 0; panelSuperior.add(jLabelIDServicio, gbcSuperior);
-    gbcSuperior.gridx = 2; panelSuperior.add(jLabelID, gbcSuperior);
+        // Añadir sección de observaciones
+        gbc.gridy = 1; gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.fill = java.awt.GridBagConstraints.NONE;
+        getContentPane().add(jLabelObservaciones, gbc);
+        gbc.gridy = 2; gbc.weighty = 0.4;
+        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(new javax.swing.JScrollPane(jTextAreaObservaciones), gbc);
 
-    gbcSuperior.gridy = 1;
-    gbcSuperior.gridx = 0; panelSuperior.add(jLabelServicio, gbcSuperior);
-    gbcSuperior.gridx = 2; panelSuperior.add(jLabelFechaHora, gbcSuperior);
+        // Añadir cabecera de la sección de otros servicios
+        javax.swing.JPanel panelOtrosServiciosHeader = new javax.swing.JPanel(new java.awt.BorderLayout());
+        panelOtrosServiciosHeader.add(jLabelOtrosServicios, java.awt.BorderLayout.WEST);
+        javax.swing.JPanel panelBotonesMasMenos = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        panelBotonesMasMenos.add(btnAgregarServicio);
+        panelBotonesMasMenos.add(btnEliminarServicio);
+        panelOtrosServiciosHeader.add(panelBotonesMasMenos, java.awt.BorderLayout.EAST);
+        gbc.gridy = 3; gbc.weighty = 0; gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(panelOtrosServiciosHeader, gbc);
 
-    gbcSuperior.gridy = 2;
-    gbcSuperior.gridx = 0; panelSuperior.add(jLabelAbogado, gbcSuperior);
-    gbcSuperior.gridx = 2; panelSuperior.add(jLabelEstado, gbcSuperior);
+        // Añadir tabla de otros servicios
+        gbc.gridy = 4; gbc.weighty = 0.6; gbc.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(jScrollPaneOtrosServicios, gbc);
 
-    gbcSuperior.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gbcSuperior.weightx = 1.0;
+        // Añadir botones inferiores
+        javax.swing.JPanel panelBotonesInferiores = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        panelBotonesInferiores.add(jButtonSalvar, java.awt.BorderLayout.WEST);
+        panelBotonesInferiores.add(jButtonCancelar, java.awt.BorderLayout.EAST);
+        gbc.gridy = 5; gbc.weighty = 0; gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(panelBotonesInferiores, gbc);
 
-    gbcSuperior.gridy = 0;
-    gbcSuperior.gridx = 1; panelSuperior.add(comboIDServicio, gbcSuperior);
-    gbcSuperior.gridx = 3; panelSuperior.add(jTextFieldID, gbcSuperior);
+        getContentPane().revalidate();
+        getContentPane().repaint();
+    }
 
-    gbcSuperior.gridy = 1;
-    gbcSuperior.gridx = 1; panelSuperior.add(comboServicio, gbcSuperior);
-    gbcSuperior.gridx = 3; panelSuperior.add(dateChooser, gbcSuperior);
-
-    gbcSuperior.gridy = 2;
-    gbcSuperior.gridx = 1; panelSuperior.add(comboAbogado, gbcSuperior);
-    gbcSuperior.gridx = 3; panelSuperior.add(comboEstado, gbcSuperior);
-
-    gbc.gridy = 0;
-    gbc.gridx = 0;
-    gbc.weightx = 1.0;
-    gbc.anchor = java.awt.GridBagConstraints.NORTH;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(panelSuperior, gbc);
-
-    gbc.gridy = 1;
-    gbc.anchor = java.awt.GridBagConstraints.WEST;
-    gbc.fill = java.awt.GridBagConstraints.NONE;
-    getContentPane().add(jLabelObservaciones, gbc);
-
-    gbc.gridy = 2;
-    gbc.weighty = 0.4;
-    gbc.fill = java.awt.GridBagConstraints.BOTH;
-    getContentPane().add(new javax.swing.JScrollPane(jTextAreaObservaciones), gbc);
-    
-    javax.swing.JPanel panelOtrosServiciosHeader = new javax.swing.JPanel(new java.awt.BorderLayout());
-    panelOtrosServiciosHeader.add(jLabelOtrosServicios, java.awt.BorderLayout.WEST);
-    javax.swing.JPanel panelBotonesMasMenos = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-    panelBotonesMasMenos.add(btnAgregarServicio);
-    panelBotonesMasMenos.add(btnEliminarServicio);
-    panelOtrosServiciosHeader.add(panelBotonesMasMenos, java.awt.BorderLayout.EAST);
-    
-    gbc.gridy = 3;
-    gbc.weighty = 0;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(panelOtrosServiciosHeader, gbc);
-
-    gbc.gridy = 4;
-    gbc.weighty = 0.6;
-    gbc.fill = java.awt.GridBagConstraints.BOTH;
-    getContentPane().add(jScrollPaneOtrosServicios, gbc);
-
-    javax.swing.JPanel panelBotonesInferiores = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
-    panelBotonesInferiores.add(jButtonSalvar, java.awt.BorderLayout.WEST);
-    panelBotonesInferiores.add(jButtonCancelar, java.awt.BorderLayout.EAST);
-
-    gbc.gridy = 5;
-    gbc.weighty = 0;
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(panelBotonesInferiores, gbc);
-
-    getContentPane().revalidate();
-    getContentPane().repaint();
-}
-    
+    // Aplicar configuraciones iniciales a la ventana y componentes
     private void configuracionInicial() {
-        // --- INICIO DE MODIFICACIÓN 1: TAMAÑO Y ESTADO DE LA VENTANA ---
-        // 1. Se establece el tamaño que tendrá la ventana en su estado "normal".
+        // Establecer tamaño y estado inicial de la ventana
         this.setSize(1024, 768);
-        
-        // 2. Se le dice que inicie maximizada, ocupando toda la pantalla.
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        // 3. Cuando se restaure a su estado normal, se centrará.
         this.setLocationRelativeTo(null);
-        // --- FIN DE MODIFICACIÓN 1 ---
 
+        // Reorganizar componentes con el nuevo layout
         organizarComponentes();
 
+        // Aplicar renderizador personalizado a la tabla de servicios
         RenderizadorCeldasNegrita renderizador = new RenderizadorCeldasNegrita();
         for (int i = 0; i < jTableOtrosServicios.getColumnCount(); i++) {
             jTableOtrosServicios.getColumnModel().getColumn(i).setCellRenderer(renderizador);
         }
 
-        // Aseguramos que los botones de la tabla tengan el texto correcto
+        // Asignar texto a los botones de la tabla
         btnAgregarServicio.setText("+");
         btnEliminarServicio.setText("-");
     }
 
+    // Cargar datos de los XML y llenar los JComboBox
     private void cargarDatos() {
         listaSolicitudes = Util.XMLSolicitud.cargarSolicitudes("Data/solicitudes.xml", null, null);
 
@@ -153,24 +135,20 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         for (Conceptos.Solicitud s : listaSolicitudes) {
             comboIDServicio.addItem(s.getId());
         }
-
         for (Conceptos.Abogados a : listaAbogados) {
             comboAbogado.addItem(a.getNombreAbogado());
         }
-
         for (Conceptos.Estado e : listaEstados) {
             comboEstado.addItem(e.getNombre());
         }
-
         for (Conceptos.Servicios srv : listaServicios) {
             comboServicio.addItem(srv.getNombreServicio());
         }
     }
 
+    // Cargar los datos de una solicitud específica en el formulario
     private void cargarDatosDeSolicitud(String idSeleccionado) {
-        if (idSeleccionado == null) {
-            return;
-        }
+        if (idSeleccionado == null) return;
 
         this.solicitudSeleccionada = listaSolicitudes.stream()
                 .filter(s -> s.getId().equals(idSeleccionado))
@@ -178,8 +156,8 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
                 .orElse(null);
 
         if (this.solicitudSeleccionada != null) {
+            // Llenar campos con los datos de la solicitud
             jTextFieldID.setText(solicitudSeleccionada.getCliente());
-
             String fechaTexto = solicitudSeleccionada.getFechaHora();
             if (fechaTexto != null && !fechaTexto.trim().isEmpty()) {
                 try {
@@ -191,19 +169,15 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
             } else {
                 dateChooser.clear();
             }
-
             jTextAreaObservaciones.setText(solicitudSeleccionada.getObservaciones());
-
             listaServicios.stream()
                     .filter(s -> s.getidServicio().equals(solicitudSeleccionada.getServicio()))
                     .findFirst()
                     .ifPresent(s -> comboServicio.setSelectedItem(s.getNombreServicio()));
-
             listaEstados.stream()
                     .filter(e -> e.getId().equals(solicitudSeleccionada.getEstado()))
                     .findFirst()
                     .ifPresent(e -> comboEstado.setSelectedItem(e.getNombre()));
-
             String abogadoId = solicitudSeleccionada.getAbogado();
             if (abogadoId != null && !abogadoId.trim().isEmpty()) {
                 listaAbogados.stream()
@@ -213,11 +187,12 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
             } else {
                 comboAbogado.setSelectedIndex(-1);
             }
-
+            actualizarTablaOtrosServicios();
+            
+            // Habilitar y deshabilitar controles
             jTextFieldID.setEditable(false);
             dateChooser.setEnabled(false);
             comboServicio.setEnabled(false);
-
             jTextAreaObservaciones.setEditable(true);
             comboAbogado.setEnabled(true);
             comboEstado.setEnabled(true);
@@ -225,17 +200,14 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
             btnAgregarServicio.setEnabled(true);
             btnEliminarServicio.setEnabled(true);
 
-            actualizarTablaOtrosServicios();
-
         } else {
-            // Limpia y deshabilita si no se encuentra la solicitud
+            // Limpiar y deshabilitar si no se encuentra la solicitud
             jTextFieldID.setText("");
             dateChooser.clear();
             jTextAreaObservaciones.setText("");
             comboServicio.setSelectedIndex(-1);
             comboEstado.setSelectedIndex(-1);
             comboAbogado.setSelectedIndex(-1);
-
             jTextAreaObservaciones.setEditable(false);
             comboAbogado.setEnabled(false);
             comboEstado.setEnabled(false);
@@ -245,61 +217,50 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         }
     }
 
-    // --- INICIO DE MODIFICACIÓN 2: RENDERIZADOR DE CELDAS ---
+    // Renderizador personalizado para estilizar las celdas de la tabla de servicios
     class RenderizadorCeldasNegrita extends javax.swing.table.DefaultTableCellRenderer {
-        
         private final Color COLOR_VERDE_CLARO = new Color(153, 255, 153);
 
         @Override
         public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
-            // Se llama al método padre para que maneje las propiedades por defecto (colores de selección, etc.)
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             if (solicitudSeleccionada == null || solicitudSeleccionada.getOtrosServicios() == null) {
-                // Si no hay solicitud, se usa la fuente normal
                 setFont(getFont().deriveFont(java.awt.Font.PLAIN));
                 return this;
             }
 
-            // Se obtiene el servicio correspondiente a la fila que se está pintando
+            // Aplicar estilo si el servicio es un servicio adicional de la solicitud
             Servicios servicioDeFila = listaServicios.get(row);
-
-            // Se comprueba si el servicio de esta fila está en la lista de servicios adicionales de la solicitud
             boolean esServicioAdicional = solicitudSeleccionada.getOtrosServicios().stream()
                     .anyMatch(id -> id.equals(servicioDeFila.getidServicio()));
 
-            // Se aplican los estilos basados en la condición
             if (esServicioAdicional) {
                 setFont(getFont().deriveFont(java.awt.Font.BOLD));
-                // Si la celda no está seleccionada, se pinta de verde. Si está seleccionada, se mantiene el color de selección.
                 if (!isSelected) {
                     setBackground(COLOR_VERDE_CLARO);
                 }
             } else {
-                // Si no es un servicio adicional, se asegura de que la fuente sea normal y el fondo el por defecto.
                 setFont(getFont().deriveFont(java.awt.Font.PLAIN));
-                 if (!isSelected) {
+                if (!isSelected) {
                     setBackground(table.getBackground());
                 }
             }
-
             return this;
         }
     }
-    // --- FIN DE MODIFICACIÓN 2 ---
-        
-    private void actualizarTablaOtrosServicios() {
-    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTableOtrosServicios.getModel();
-    model.setRowCount(0);
 
-    if (listaServicios != null) {
-        for (Servicios s : listaServicios) {
-            // CORRECCIÓN: La primera columna ahora es el ID del servicio.
-            model.addRow(new Object[]{s.getidServicio(), s.getNombreServicio(), s.getPrecioServicio()});
+    // Refrescar la tabla de "Otros Servicios"
+    private void actualizarTablaOtrosServicios() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTableOtrosServicios.getModel();
+        model.setRowCount(0);
+
+        if (listaServicios != null) {
+            for (Servicios s : listaServicios) {
+                model.addRow(new Object[]{s.getidServicio(), s.getNombreServicio(), s.getPrecioServicio()});
+            }
         }
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -617,18 +578,13 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
     private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
+    // Acción del botón (-) para quitar un servicio adicional
     private void btnEliminarServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarServicioActionPerformed
         int filaSeleccionada = jTableOtrosServicios.getSelectedRow();
-
-        if (solicitudSeleccionada == null || filaSeleccionada == -1) {
-            return;
-        }
-        if (solicitudSeleccionada.getOtrosServicios() == null) {
-            return;
-        }
+        if (solicitudSeleccionada == null || filaSeleccionada == -1) return;
+        if (solicitudSeleccionada.getOtrosServicios() == null) return;
 
         Servicios servicioParaEliminar = listaServicios.get(filaSeleccionada);
-
         boolean fueEliminado = solicitudSeleccionada.getOtrosServicios().remove(servicioParaEliminar.getidServicio());
 
         if (fueEliminado) {
@@ -636,6 +592,7 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarServicioActionPerformed
 
+    // Acción al seleccionar un ID de solicitud del ComboBox
     private void comboIDServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboIDServicioActionPerformed
         if (comboIDServicio.getSelectedIndex() != -1) {
             String idSeleccionado = (String) comboIDServicio.getSelectedItem();
@@ -643,6 +600,7 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboIDServicioActionPerformed
 
+    // Acción del botón Salvar
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         if (solicitudSeleccionada == null) {
             JOptionPane.showMessageDialog(this, "No hay ninguna solicitud seleccionada para guardar.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -658,6 +616,7 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
             return;
         }
 
+        // Actualizar datos de la solicitud en memoria
         String nuevoAbogadoId = listaAbogados.stream()
                 .filter(a -> a.getNombreAbogado().equals(nombreAbogado))
                 .map(Abogados::getidAbogado).findFirst().orElse("");
@@ -670,26 +629,24 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
 
         solicitudSeleccionada.setObservaciones(nuevasObservaciones);
 
+        // Guardar la lista completa de solicitudes en el archivo XML
         Conceptos.Atender.actualizarYGuardar(listaSolicitudes, solicitudSeleccionada, "Data/solicitudes.xml");
 
         JOptionPane.showMessageDialog(this, "Solicitud actualizada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
         this.dispose();
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
+    // Acción del botón Cancelar
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
+    // Acción del botón (+) para agregar un servicio adicional
     private void btnAgregarServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarServicioActionPerformed
         int filaSeleccionada = jTableOtrosServicios.getSelectedRow();
-
-        if (solicitudSeleccionada == null || filaSeleccionada == -1) {
-            return;
-        }
+        if (solicitudSeleccionada == null || filaSeleccionada == -1) return;
 
         Servicios servicioParaAgregar = listaServicios.get(filaSeleccionada);
-
         if (solicitudSeleccionada.getOtrosServicios() == null) {
             solicitudSeleccionada.setOtrosServicios(new ArrayList<>());
         }
@@ -703,8 +660,9 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarServicioActionPerformed
 
+    // Método principal para ejecución independiente de la ventana
     public static void main(String args[]) {
-
+        // Establecer apariencia visual Nimbus
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -722,13 +680,13 @@ public class AtenderSolicitudes extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(AtenderSolicitudes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
+        // Lanzar la interfaz de usuario
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new AtenderSolicitudes().setVisible(true);
             }
         });
     }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarServicio;

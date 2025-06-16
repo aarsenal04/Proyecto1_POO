@@ -17,23 +17,26 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class CrearSolicitudes extends javax.swing.JFrame {
-    private Util.XMLCliente xmlCliente;
-    private Util.XMLServicio xmlServicio;
-    private Util.XMLSolicitud xmlSolicitudes;
-    private List<Clientes> listaDeClientes;
-    private List<Servicios> listaDeServicios;
 
-public CrearSolicitudes() {
-    initComponents();
-    organizarComponentes(); // <-- AÑADE ESTA LÍNEA
-    inicializarComponentesPersonalizados();
-}
+    // --- Atributos de la clase ---
+    private Util.XMLCliente xmlCliente; //Manejador para el archivo XML de clientes
+    private Util.XMLServicio xmlServicio; //Manejador para el archivo XML de servicios
+    private Util.XMLSolicitud xmlSolicitudes; //Manejador para el archivo XML de solicitudes
+    private List<Clientes> listaDeClientes; //Lista de clientes en memoria
+    private List<Servicios> listaDeServicios; //Lista de servicios en memoria
 
+    // Constructor de la ventana para crear solicitudes
+    public CrearSolicitudes() {
+        initComponents();
+        organizarComponentes();
+        inicializarComponentesPersonalizados();
+    }
+
+    // Organizar y distribuir los componentes en la ventana
     private void organizarComponentes() {
         jPanel6.removeAll();
         jPanel6.setLayout(new java.awt.GridBagLayout());
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
-
         gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 
         javax.swing.JPanel panelSuperior = new javax.swing.JPanel(new java.awt.GridBagLayout());
@@ -41,47 +44,30 @@ public CrearSolicitudes() {
         gbcSuperior.insets = new java.awt.Insets(5, 5, 5, 5);
         gbcSuperior.anchor = java.awt.GridBagConstraints.WEST;
 
-        gbcSuperior.gridy = 0;
-        gbcSuperior.gridx = 0; panelSuperior.add(jLabel6, gbcSuperior);
+        gbcSuperior.gridy = 0; gbcSuperior.gridx = 0; panelSuperior.add(jLabel6, gbcSuperior);
         gbcSuperior.gridx = 2; panelSuperior.add(jLabel10, gbcSuperior);
-
-        gbcSuperior.gridy = 1;
-        gbcSuperior.gridx = 0; panelSuperior.add(jLabel8, gbcSuperior);
-
-        gbcSuperior.gridy = 2;
-        gbcSuperior.gridx = 0; panelSuperior.add(jLabel12, gbcSuperior);
-
+        gbcSuperior.gridy = 1; gbcSuperior.gridx = 0; panelSuperior.add(jLabel8, gbcSuperior);
+        gbcSuperior.gridy = 2; gbcSuperior.gridx = 0; panelSuperior.add(jLabel12, gbcSuperior);
         gbcSuperior.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gbcSuperior.weightx = 1.0;
-        gbcSuperior.gridy = 0;
-        gbcSuperior.gridx = 1; panelSuperior.add(txtId, gbcSuperior);
+        gbcSuperior.gridy = 0; gbcSuperior.gridx = 1; panelSuperior.add(txtId, gbcSuperior);
         gbcSuperior.gridx = 3; panelSuperior.add(comboCliente, gbcSuperior);
-
-        gbcSuperior.gridy = 1;
-        gbcSuperior.gridx = 1; panelSuperior.add(comboServicio, gbcSuperior);
-
-        gbcSuperior.gridy = 2;
-        gbcSuperior.gridx = 1; panelSuperior.add(dateChooser, gbcSuperior);
-
+        gbcSuperior.gridy = 1; gbcSuperior.gridx = 1; panelSuperior.add(comboServicio, gbcSuperior);
+        gbcSuperior.gridy = 2; gbcSuperior.gridx = 1; panelSuperior.add(dateChooser, gbcSuperior);
         gbcSuperior.fill = java.awt.GridBagConstraints.NONE;
         gbcSuperior.weightx = 0;
-        gbcSuperior.gridy = 0;
-        gbcSuperior.gridx = 4; panelSuperior.add(btnNuevoCliente, gbcSuperior);
+        gbcSuperior.gridy = 0; gbcSuperior.gridx = 4; panelSuperior.add(btnNuevoCliente, gbcSuperior);
 
-        gbc.gridy = 0;
-        gbc.gridx = 0;
-        gbc.weightx = 1.0;
+        gbc.gridy = 0; gbc.gridx = 0; gbc.weightx = 1.0;
         gbc.anchor = java.awt.GridBagConstraints.NORTH;
         gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel6.add(panelSuperior, gbc);
 
-        gbc.gridy = 1;
-        gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.gridy = 1; gbc.anchor = java.awt.GridBagConstraints.WEST;
         gbc.fill = java.awt.GridBagConstraints.NONE;
         jPanel6.add(jLabel15, gbc);
 
-        gbc.gridy = 2;
-        gbc.weighty = 1.0;
+        gbc.gridy = 2; gbc.weighty = 1.0;
         gbc.fill = java.awt.GridBagConstraints.BOTH;
         jPanel6.add(jScrollPane2, gbc);
 
@@ -89,46 +75,53 @@ public CrearSolicitudes() {
         panelBotones.add(btnSalvar, java.awt.BorderLayout.WEST);
         panelBotones.add(btnCancelar, java.awt.BorderLayout.EAST);
 
-        gbc.gridy = 3;
-        gbc.weighty = 0;
+        gbc.gridy = 3; gbc.weighty = 0;
         gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel6.add(panelBotones, gbc);
 
         jPanel6.revalidate();
         jPanel6.repaint();
     }
-    
-private void inicializarComponentesPersonalizados() {
-    this.xmlCliente = new XMLCliente();
-    this.xmlServicio = new XMLServicio();
-    this.xmlSolicitudes = new XMLSolicitud();
 
-    this.setTitle("Crear Solicitud de Servicio");
-    this.setSize(1024, 768); // Tamaño deseado al restaurar
-    this.setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia maximizada
-    this.setLocationRelativeTo(null);
-    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    // Inicializar manejadores XML, configurar ventana y cargar datos iniciales
+    private void inicializarComponentesPersonalizados() {
+        this.xmlCliente = new XMLCliente();
+        this.xmlServicio = new XMLServicio();
+        this.xmlSolicitudes = new XMLSolicitud();
 
-    cargarClientes();
-    cargarServicios();
+        this.setTitle("Crear Solicitud de Servicio");
+        this.setSize(1024, 768);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    comboCliente.addActionListener(e -> {});
+        cargarClientes();
+        cargarServicios();
+        
+        // Listener para actualizar el ID de cliente al cambiar la selección
+        comboCliente.addActionListener(e -> {
+            int selectedIndex = comboCliente.getSelectedIndex();
+            if (selectedIndex != -1) {
+                txtId.setText(listaDeClientes.get(selectedIndex).getidCliente());
+            }
+        });
 
-    txtId.setEditable(false);
-}
+        txtId.setEditable(false);
+    }
 
+    // Cargar los clientes del XML y llenar el ComboBox
     private void cargarClientes() {
         comboCliente.removeAllItems();
         this.listaDeClientes = xmlCliente.cargarClientes("Data/clientes.xml");
         for (Clientes cliente : listaDeClientes) {
             comboCliente.addItem(cliente.getNombreCliente());
         }
-            if (!this.listaDeClientes.isEmpty()) {
-            comboCliente.setSelectedIndex(0); 
-            //txtId.setText(this.listaDeClientes.get(0).getidCliente());
+        if (!this.listaDeClientes.isEmpty()) {
+            comboCliente.setSelectedIndex(0);
         }
     }
-    
+
+    // Cargar los servicios del XML y llenar el ComboBox
     private void cargarServicios() {
         comboServicio.removeAllItems();
         this.listaDeServicios = xmlServicio.cargarServicios("Data/servicios.xml");
@@ -344,31 +337,32 @@ private void inicializarComponentesPersonalizados() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtIdActionPerformed
 
+    // Acción del botón Salvar
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        // Validar entradas del formulario
         if (comboCliente.getSelectedIndex() == -1 || comboServicio.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente y un servicio.", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
         if (dateChooser.getDateTimeStrict() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha y hora.", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String id = "SOL" + System.currentTimeMillis(); // ID unico basado en timestamp
-        txtId.setText(id);  // mostrar el ID al usuario
+        // Generar ID único para la solicitud
+        String id = "SOL" + System.currentTimeMillis();
+        txtId.setText(id);
 
+        // Obtener datos del formulario
         String observaciones = jTextArea1.getText();
         LocalDateTime fechaHora = dateChooser.getDateTimeStrict();
-        
         Clientes clienteSeleccionado = listaDeClientes.get(comboCliente.getSelectedIndex());
         Servicios servicioSeleccionado = listaDeServicios.get(comboServicio.getSelectedIndex());
-        
         Estado estadoInicial = new Estado("000", "Nuevo");
-        
+
+        // Crear y poblar el objeto Solicitud
         Solicitud nuevaSolicitud = new Solicitud();
         nuevaSolicitud.setId(id);
         nuevaSolicitud.setCliente(clienteSeleccionado.getidCliente());
@@ -376,31 +370,32 @@ private void inicializarComponentesPersonalizados() {
         nuevaSolicitud.setEstado(estadoInicial.getId());
         nuevaSolicitud.setFechaHora(fechaHora.toString());
         nuevaSolicitud.setObservaciones(observaciones);
-        
+
+        // Guardar la nueva solicitud en XML y cerrar
         XMLSolicitud.guardarSolicitud(nuevaSolicitud, "Data/solicitudes.xml");
         JOptionPane.showMessageDialog(this, "Solicitud guardada exitosamente con el ID: " + id, "Exito", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    // Acción del botón Cancelar
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-    this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    // Acción del botón (+) para abrir el diálogo de nuevo cliente
     private void btnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoClienteActionPerformed
         CrearNuevoClienteDialog dialogo = new CrearNuevoClienteDialog(
-            (Frame) SwingUtilities.getWindowAncestor(this),
-            this.xmlCliente,
-            this.comboCliente
+                (Frame) SwingUtilities.getWindowAncestor(this),
+                this.xmlCliente,
+                this.comboCliente
         );
         dialogo.setVisible(true);
-        
-        cargarClientes();
+        cargarClientes(); // Recargar clientes por si se añadió uno nuevo
     }//GEN-LAST:event_btnNuevoClienteActionPerformed
 
-
+    // Método principal para ejecución independiente de la ventana
     public static void main(String args[]) {
-
+        // Establecer apariencia visual Nimbus
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -418,6 +413,7 @@ private void inicializarComponentesPersonalizados() {
             java.util.logging.Logger.getLogger(CrearSolicitudes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
+        // Lanzar la interfaz de usuario
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CrearSolicitudes().setVisible(true);

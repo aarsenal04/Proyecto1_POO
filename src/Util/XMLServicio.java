@@ -13,13 +13,16 @@ import java.util.List;
 public class XMLServicio {
 
     private List<Servicios> listaServicios = new ArrayList<>();
+    // Para tener la ruta disponible para guardar
     private String rutaArchivoGuardado;
 
+    // Constructor vacío
     public XMLServicio() {
-        // Constructor vacío
     }
 
+    // Cargar servicios desde XML
     public List<Servicios> cargarServicios(String rutaArchivo) {
+        // Guardar la ruta para usarla al guardar
         this.rutaArchivoGuardado = rutaArchivo;
         listaServicios.clear();
         try {
@@ -44,6 +47,7 @@ public class XMLServicio {
         return listaServicios;
     }
 
+    // Guardar servicios al XML
     public void guardarServicios(String rutaArchivo, List<Servicios> servicios) {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -75,19 +79,23 @@ public class XMLServicio {
         }
     }
 
+    // Agregar nuevo servicio
     public boolean agregarServicio(Servicios nuevo) {
         if (buscarPorId(nuevo.getidServicio()) == null) {
             listaServicios.add(nuevo);
+            // Guardar al XML
             guardarServicios(this.rutaArchivoGuardado, listaServicios);
             return true;
         }
         return false;
     }
 
+    // Actualizar servicio existente
     public boolean actualizarServicio(Servicios actualizado) {
         for (int i = 0; i < listaServicios.size(); i++) {
             if (listaServicios.get(i).getidServicio().equals(actualizado.getidServicio())) {
                 listaServicios.set(i, actualizado);
+                // Guardar al XML
                 guardarServicios(this.rutaArchivoGuardado, listaServicios);
                 return true;
             }
@@ -95,20 +103,24 @@ public class XMLServicio {
         return false;
     }
 
+    // Eliminar servicio por ID
     public boolean eliminarServicio(String id) {
         Servicios servicioAEliminar = buscarPorId(id);
         if (servicioAEliminar != null) {
             listaServicios.remove(servicioAEliminar);
+            // Guardar al XML
             guardarServicios(this.rutaArchivoGuardado, listaServicios);
             return true;
         }
         return false;
     }
-
+    
+    // Obtener lista actual de servicios en memoria
     public List<Servicios> getListaServicios() {
         return listaServicios;
     }
 
+    // Buscar servicio por ID
     public Servicios buscarPorId(String id) {
         for (Servicios s : listaServicios) {
             if (s.getidServicio().equals(id)) return s;
